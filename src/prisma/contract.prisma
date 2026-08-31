@@ -1,27 +1,72 @@
 // use prisma-next
 enum user_role {
-  @@type("pg/text@1")
-  admin   = "admin"
+  admin = "admin"
   manager = "manager"
-  user    = "user"
+  user = "user"
+
+  @@type("pg/text@1")
 }
 
 enum user_status {
-  @@type("pg/text@1")
-  active    = "active"
-  inactive  = "inactive"
+  active = "active"
+  inactive = "inactive"
   suspended = "suspended"
+
+  @@type("pg/text@1")
+}
+
+enum OrganizationRole {
+  ADMIN = "ADMIN"
+  MEMBER = "MEMBER"
+  OWNER = "OWNER"
+
+  @@type("pg/text@1")
 }
 
 model User {
-  id               Int                        @id @default(autoincrement())
-  email            String                     @unique
+  id               Int         @id @default(autoincrement())
+  email            String      @unique
   password         String
   firstName        String?
   lastName         String?
-  role             user_role                  @default(user)
-  status           user_status                @default(active)
+  role             user_role   @default(user)
+  status           user_status @default(active)
   refreshTokenHash String?
-  createdAt        TimestamptzString          @default(now())
+
+  createdAt        TimestamptzString @default(now())
   updatedAt        temporal.updatedAtString()
+
+  organizationMembers OrganizationMember[]
 }
+
+model Organization {
+  id          Int     @id @default(autoincrement())
+  name        String?
+  slug        String  @unique
+  logoUrl     String?
+  description String?
+
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  members     OrganizationMember[]
+}
+
+model OrganizationMember {
+  id Int @id @default(autoincrement())
+
+  organizationId Int
+  userId         Int
+
+  role OrganizationRole @default(MEMBER)
+
+  joinedAt TimestamptzString @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+}
+

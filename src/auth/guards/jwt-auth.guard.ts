@@ -6,6 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import type { Request } from 'express';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
 import {
@@ -35,7 +36,7 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = this.getRequest(context);
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -65,8 +66,17 @@ export class JwtAuthGuard implements CanActivate {
     }
   }
 
+  private getRequest(context: ExecutionContext): Request {
+    if (context.getType && (context.getType() as string) === 'graphql') {
+      const gqlCtx = GqlExecutionContext.create(context);
+      return gqlCtx.getContext()?.req;
+    }
+    return context.switchToHttp().getRequest<Request>();
+  }
+
+
   private extractTokenFromHeader(request: Request): string | undefined {
-    const authHeader = request.headers.authorization;
+    const authHeader = request?.headers?.authorization;
     if (!authHeader) {
       return undefined;
     }
@@ -74,3 +84,4 @@ export class JwtAuthGuard implements CanActivate {
     return type === 'Bearer' && token ? token : undefined;
   }
 }
+

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from '../prisma/prisma.module.js';
 import { AuthController } from './auth.controller.js';
+import { AuthResolver } from './auth.resolver.js';
 import { AuthService } from './auth.service.js';
 import { USER_REPOSITORY } from '../domain/repositories/user-repository.interface.js';
 import { PrismaUserRepository } from '../infrastructure/repositories/prisma-user.repository.js';
@@ -22,6 +23,7 @@ import { RolesGuard } from './guards/roles.guard.js';
   controllers: [AuthController],
   providers: [
     AuthService,
+    AuthResolver,
     JwtAuthGuard,
     RolesGuard,
     {
@@ -39,6 +41,7 @@ import { RolesGuard } from './guards/roles.guard.js';
   ],
   exports: [
     AuthService,
+    AuthResolver,
     JwtAuthGuard,
     RolesGuard,
     USER_REPOSITORY,
@@ -47,3 +50,4 @@ import { RolesGuard } from './guards/roles.guard.js';
   ],
 })
 export class AuthModule {}
+

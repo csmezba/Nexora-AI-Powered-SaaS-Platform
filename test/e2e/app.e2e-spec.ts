@@ -23,7 +23,20 @@ describe('AppController (e2e)', () => {
       .expect('Hello World!');
   });
 
+  it('/graphql (POST) schema introspection', () => {
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        query: '{ __schema { types { name } } }',
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.data.__schema.types).toBeDefined();
+      });
+  });
+
   afterEach(async () => {
     await app.close();
   });
 });
+

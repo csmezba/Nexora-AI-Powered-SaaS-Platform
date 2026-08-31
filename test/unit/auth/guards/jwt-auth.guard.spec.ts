@@ -128,4 +128,51 @@ describe('JwtAuthGuard', () => {
       'Invalid or expired authentication token',
     );
   });
+
+  it('should authenticate correctly with GraphQL execution context', async () => {
+    mockReflector.getAllAndOverride.mockReturnValue(false);
+
+    const req: Record<string, unknown> = {
+      headers: {
+        authorization: 'Bearer gql-token',
+      },
+    };
+
+    const gqlContext = {
+      getHandler: vi.fn(),
+      getClass: vi.fn(),
+      getType: () => 'graphql',
+      switchToHttp: () => ({
+        getRequest: () => ({}),
+      }),
+      getArgs: () => [{}, {}, { req }, {}],
+      getArgByIndex: (index: number) => (index === 2 ? { req } : {}),
+    } as unknown as ExecutionContext;
+
+    mockTokenService.verifyAccessToken.mockResolvedValue({
+      sub: 1,
+      email: 'gql@nexora.ai',
+      role: UserRole.USER,
+    });
+
+    const userEntity = UserEntity.reconstitute({
+      id: 1,
+      email: 'gql@nexora.ai',
+      passwordHash: 'hash',
+      firstName: 'GraphQL',
+      lastName: 'User',
+      role: UserRole.USER,
+      status: UserStatus.ACTIVE,
+      refreshTokenHash: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    mockUserRepository.findById.mockResolvedValue(userEntity);
+
+    const result = await guard.canActivate(gqlContext);
+    expect(result).toBe(true);
+    expect(req['user']).toEqual(userEntity.sanitize());
+  });
 });
+

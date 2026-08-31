@@ -71,4 +71,24 @@ describe('RolesGuard', () => {
 
     expect(() => guard.canActivate(context)).toThrowError(ForbiddenException);
   });
+
+  it('should evaluate permissions properly with GraphQL execution context', () => {
+    mockReflector.getAllAndOverride.mockReturnValue([UserRole.ADMIN]);
+
+    const gqlContext = {
+      getHandler: vi.fn(),
+      getClass: vi.fn(),
+      getType: () => 'graphql',
+      switchToHttp: () => ({
+        getRequest: () => ({}),
+      }),
+      getArgs: () => [{}, {}, { req: { user: { id: 1, role: UserRole.ADMIN, status: UserStatus.ACTIVE } } }, {}],
+      getArgByIndex: (index: number) =>
+        index === 2 ? { req: { user: { id: 1, role: UserRole.ADMIN, status: UserStatus.ACTIVE } } } : {},
+    } as unknown as ExecutionContext;
+
+    const result = guard.canActivate(gqlContext);
+    expect(result).toBe(true);
+  });
 });
+

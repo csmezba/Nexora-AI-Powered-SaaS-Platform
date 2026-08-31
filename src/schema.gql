@@ -1,0 +1,143 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Authentication response payload containing tokens and user data"""
+type AuthResponse {
+  """JWT Access Token"""
+  accessToken: String!
+
+  """Access token expiration in seconds"""
+  expiresIn: Int!
+
+  """JWT Refresh Token"""
+  refreshToken: String!
+
+  """Token authorization type"""
+  tokenType: String!
+
+  """Authenticated user profile"""
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Input payload for user login"""
+input LoginInput {
+  """Registered email address"""
+  email: String!
+
+  """Account password"""
+  password: String!
+}
+
+"""Logout status response"""
+type LogoutResponse {
+  """Indicates whether the logout was successful"""
+  success: Boolean!
+}
+
+"""Generic message response with user context"""
+type MessageResponse {
+  """Response status message"""
+  message: String!
+
+  """Associated user profile"""
+  user: User
+}
+
+type Mutation {
+  """Authenticate user with email and password"""
+  login(input: LoginInput!): AuthResponse!
+
+  """Log out user by invalidating session"""
+  logout: LogoutResponse!
+
+  """Refresh JWT access token using refresh token"""
+  refreshToken(input: RefreshTokenInput!): AuthResponse!
+
+  """Register a new user account"""
+  register(input: RegisterInput!): AuthResponse!
+}
+
+type Query {
+  """Admin-only operation"""
+  adminOnly: MessageResponse!
+
+  """Manager and Admin operation"""
+  managerOnly: MessageResponse!
+
+  """Fetch current logged in user profile"""
+  me: User!
+}
+
+"""Input payload for refreshing access token"""
+input RefreshTokenInput {
+  """Valid refresh token string"""
+  refreshToken: String!
+}
+
+"""Input payload for user registration"""
+input RegisterInput {
+  """Email address of the user"""
+  email: String!
+
+  """User first name"""
+  firstName: String
+
+  """User last name"""
+  lastName: String
+
+  """Password (minimum 6 characters)"""
+  password: String!
+
+  """User role (admin, manager, user)"""
+  role: UserRole
+}
+
+"""Sanitized user profile information"""
+type User {
+  """Account creation timestamp"""
+  createdAt: DateTime!
+
+  """User email address"""
+  email: String!
+
+  """User first name"""
+  firstName: String
+
+  """Full formatted user name"""
+  fullName: String!
+
+  """Unique user identifier"""
+  id: Int!
+
+  """User last name"""
+  lastName: String
+
+  """User authorization role"""
+  role: UserRole!
+
+  """User account status"""
+  status: UserStatus!
+
+  """Account last updated timestamp"""
+  updatedAt: DateTime!
+}
+
+"""User role permissions in the application"""
+enum UserRole {
+  ADMIN
+  MANAGER
+  USER
+}
+
+"""User status states in the application"""
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}

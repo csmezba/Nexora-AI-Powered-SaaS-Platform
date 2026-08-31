@@ -5,6 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { ROLES_KEY } from '../decorators/roles.decorator.js';
 import { UserRole } from '../../domain/enums/user-role.enum.js';
 import { SanitizedUser } from '../../domain/entities/user.entity.js';
@@ -23,8 +24,8 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user as SanitizedUser | undefined;
+    const request = this.getRequest(context);
+    const user = request?.user as SanitizedUser | undefined;
 
     if (!user) {
       throw new ForbiddenException('Access denied: User is not authenticated');
@@ -40,4 +41,14 @@ export class RolesGuard implements CanActivate {
 
     return true;
   }
+
+  private getRequest(context: ExecutionContext): { user?: unknown } {
+    if (context.getType && (context.getType() as string) === 'graphql') {
+      const gqlCtx = GqlExecutionContext.create(context);
+      return gqlCtx.getContext()?.req;
+    }
+    return context.switchToHttp().getRequest();
+  }
+
 }
+

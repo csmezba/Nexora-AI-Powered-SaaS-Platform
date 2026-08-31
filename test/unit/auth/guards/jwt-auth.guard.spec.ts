@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtAuthGuard } from './jwt-auth.guard.js';
-import { UserEntity } from '../../domain/entities/user.entity.js';
-import { UserRole } from '../../domain/enums/user-role.enum.js';
-import { UserStatus } from '../../domain/enums/user-status.enum.js';
+import { JwtAuthGuard } from '../../../../src/auth/guards/jwt-auth.guard.js';
+import { UserEntity } from '../../../../src/domain/entities/user.entity.js';
+import { UserRole } from '../../../../src/domain/enums/user-role.enum.js';
+import { UserStatus } from '../../../../src/domain/enums/user-status.enum.js';
 
 describe('JwtAuthGuard', () => {
   const mockReflector = {

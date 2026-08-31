@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { JwtService } from '@nestjs/jwt';
-import { JwtTokenService } from './jwt-token.service.js';
-import { UserRole } from '../../domain/enums/user-role.enum.js';
-import { TokenPayload } from '../../domain/services/token-service.interface.js';
+import { JwtTokenService } from '../../../../src/infrastructure/services/jwt-token.service.js';
+import { UserRole } from '../../../../src/domain/enums/user-role.enum.js';
+import { TokenPayload } from '../../../../src/domain/services/token-service.interface.js';
 
 describe('JwtTokenService', () => {
   const jwtService = new JwtService({});

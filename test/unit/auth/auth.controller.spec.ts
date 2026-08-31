@@ -1,9 +1,9 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { AuthController } from './auth.controller.js';
-import { AuthService } from './auth.service.js';
-import { UserRole } from '../domain/enums/user-role.enum.js';
-import { UserStatus } from '../domain/enums/user-status.enum.js';
-import { SanitizedUser } from '../domain/entities/user.entity.js';
+import { AuthController } from '../../../src/auth/auth.controller.js';
+import { AuthService } from '../../../src/auth/auth.service.js';
+import { UserRole } from '../../../src/domain/enums/user-role.enum.js';
+import { UserStatus } from '../../../src/domain/enums/user-status.enum.js';
+import { SanitizedUser } from '../../../src/domain/entities/user.entity.js';
 
 describe('AuthController', () => {
   let controller: AuthController;

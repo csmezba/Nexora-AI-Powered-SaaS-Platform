@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { UserEntity } from './user.entity.js';
-import { UserRole } from '../enums/user-role.enum.js';
-import { UserStatus } from '../enums/user-status.enum.js';
+import { UserEntity } from '../../../../src/domain/entities/user.entity.js';
+import { UserRole } from '../../../../src/domain/enums/user-role.enum.js';
+import { UserStatus } from '../../../../src/domain/enums/user-status.enum.js';
 
 describe('UserEntity (Domain Entity)', () => {
   const baseProps = {

@@ -1,8 +1,8 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { PrismaUserRepository } from './prisma-user.repository.js';
-import { PrismaService } from '../../prisma/prisma.service.js';
-import { UserRole } from '../../domain/enums/user-role.enum.js';
-import { UserStatus } from '../../domain/enums/user-status.enum.js';
+import { PrismaUserRepository } from '../../../../src/infrastructure/repositories/prisma-user.repository.js';
+import { PrismaService } from '../../../../src/prisma/prisma.service.js';
+import { UserRole } from '../../../../src/domain/enums/user-role.enum.js';
+import { UserStatus } from '../../../../src/domain/enums/user-status.enum.js';
 
 describe('PrismaUserRepository', () => {
   let repository: PrismaUserRepository;

@@ -1,12 +1,12 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { ConflictException, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service.js';
-import { UserEntity } from '../domain/entities/user.entity.js';
-import { UserRole } from '../domain/enums/user-role.enum.js';
-import { UserStatus } from '../domain/enums/user-status.enum.js';
-import { IUserRepository } from '../domain/repositories/user-repository.interface.js';
-import { IPasswordHasher } from '../domain/services/password-hasher.interface.js';
-import { ITokenService } from '../domain/services/token-service.interface.js';
+import { AuthService } from '../../../src/auth/auth.service.js';
+import { UserEntity } from '../../../src/domain/entities/user.entity.js';
+import { UserRole } from '../../../src/domain/enums/user-role.enum.js';
+import { UserStatus } from '../../../src/domain/enums/user-status.enum.js';
+import { IUserRepository } from '../../../src/domain/repositories/user-repository.interface.js';
+import { IPasswordHasher } from '../../../src/domain/services/password-hasher.interface.js';
+import { ITokenService } from '../../../src/domain/services/token-service.interface.js';
 
 describe('AuthService', () => {
   let authService: AuthService;

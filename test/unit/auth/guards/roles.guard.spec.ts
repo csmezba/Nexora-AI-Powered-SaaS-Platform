@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RolesGuard } from './roles.guard.js';
-import { UserRole } from '../../domain/enums/user-role.enum.js';
-import { UserStatus } from '../../domain/enums/user-status.enum.js';
+import { RolesGuard } from '../../../../src/auth/guards/roles.guard.js';
+import { UserRole } from '../../../../src/domain/enums/user-role.enum.js';
+import { UserStatus } from '../../../../src/domain/enums/user-status.enum.js';
 
 describe('RolesGuard', () => {
   const mockReflector = {

@@ -12,6 +12,42 @@
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "user_role": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "admin",
+                "value": "admin"
+              },
+              {
+                "name": "manager",
+                "value": "manager"
+              },
+              {
+                "name": "user",
+                "value": "user"
+              }
+            ]
+          },
+          "user_status": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "active",
+                "value": "active"
+              },
+              {
+                "name": "inactive",
+                "value": "inactive"
+              },
+              {
+                "name": "suspended",
+                "value": "suspended"
+              }
+            ]
+          }
+        },
         "models": {
           "User": {
             "fields": {
@@ -29,6 +65,13 @@
                   "kind": "scalar"
                 }
               },
+              "firstName": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -36,7 +79,7 @@
                   "kind": "scalar"
                 }
               },
-              "name": {
+              "lastName": {
                 "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
@@ -50,17 +93,43 @@
                   "kind": "scalar"
                 }
               },
+              "refreshTokenHash": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "role": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "user_role",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "user_status",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
               "updatedAt": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar"
-                }
-              },
-              "username": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               }
@@ -74,20 +143,29 @@
                 "email": {
                   "column": "email"
                 },
+                "firstName": {
+                  "column": "firstName"
+                },
                 "id": {
                   "column": "id"
                 },
-                "name": {
-                  "column": "name"
+                "lastName": {
+                  "column": "lastName"
                 },
                 "password": {
                   "column": "password"
                 },
+                "refreshTokenHash": {
+                  "column": "refreshTokenHash"
+                },
+                "role": {
+                  "column": "role"
+                },
+                "status": {
+                  "column": "status"
+                },
                 "updatedAt": {
                   "column": "updatedAt"
-                },
-                "username": {
-                  "column": "username"
                 }
               },
               "namespaceId": "public",
@@ -104,6 +182,18 @@
         "entries": {
           "table": {
             "user": {
+              "checks": [
+                {
+                  "expression": "\"role\" IN ('admin', 'manager', 'user')",
+                  "name": "user_role_check_7fb0099c",
+                  "prefix": "user_role_check"
+                },
+                {
+                  "expression": "\"status\" IN ('active', 'inactive', 'suspended')",
+                  "name": "user_status_check_81c5a654",
+                  "prefix": "user_status_check"
+                }
+              ],
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
@@ -119,6 +209,11 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "firstName": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -128,7 +223,7 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
-                "name": {
+                "lastName": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": true
@@ -138,15 +233,45 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "refreshTokenHash": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "role": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "user"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "user_role",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "status": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "active"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "user_status",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
-                },
-                "username": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true
                 }
               },
               "foreignKeys": [],
@@ -164,13 +289,31 @@
                 }
               ]
             }
+          },
+          "valueSet": {
+            "user_role": {
+              "kind": "valueSet",
+              "values": [
+                "admin",
+                "manager",
+                "user"
+              ]
+            },
+            "user_status": {
+              "kind": "valueSet",
+              "values": [
+                "active",
+                "inactive",
+                "suspended"
+              ]
+            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b42236b376bf2c29fc84d889c50247d3115305c3f4dbb75c1b7985da68ccc47d"
+    "storageHash": "89863fdaa964dd3dfdc025edc6361251b19b9c62a247241c561fc677d33d44b1"
   },
   "execution": {
     "executionHash": "a499031370d1fd1891ca11072d3f7e11be752b686057f7c6d0900ee0159f4ed0",

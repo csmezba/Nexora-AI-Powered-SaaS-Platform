@@ -3,7 +3,7 @@ import { db } from './db.js';
 
 @Injectable()
 export class PrismaService {
-  public get db() {
+  public get db(): typeof db {
     return db;
   }
 }

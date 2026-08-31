@@ -1,10 +1,27 @@
 // use prisma-next
+enum user_role {
+  @@type("pg/text@1")
+  admin   = "admin"
+  manager = "manager"
+  user    = "user"
+}
+
+enum user_status {
+  @@type("pg/text@1")
+  active    = "active"
+  inactive  = "inactive"
+  suspended = "suspended"
+}
+
 model User {
-  id        Int                        @id @default(autoincrement())
-  email     String                     @unique
-  password  String
-  name      String?
-  username  String?
-  createdAt TimestamptzString          @default(now())
-  updatedAt temporal.updatedAtString()
+  id               Int                        @id @default(autoincrement())
+  email            String                     @unique
+  password         String
+  firstName        String?
+  lastName         String?
+  role             user_role                  @default(user)
+  status           user_status                @default(active)
+  refreshTokenHash String?
+  createdAt        TimestamptzString          @default(now())
+  updatedAt        temporal.updatedAtString()
 }

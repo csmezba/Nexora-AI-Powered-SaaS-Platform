@@ -95,7 +95,6 @@ export class UpdateOrganizationInput {
 
 @ObjectType('Organization', { description: 'Organization details' })
 export class OrganizationResponseDto implements SanitizedOrganization {
-  @Field(() => Int, { description: 'Internal organization identifier' })
   id!: number;
 
   @Field(() => String, { description: 'Public unique organization identifier' })

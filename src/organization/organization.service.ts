@@ -46,31 +46,29 @@ export class OrganizationService {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  public async resolveOrganization(identifier: string | number): Promise<OrganizationEntity> {
-    const org = await this.orgRepository.findByIdOrPubIdOrSlug(identifier);
-    if (!org) {
-      throw new NotFoundException(`Organization '${identifier}' not found`);
+  public async resolveOrganization(identifier: string): Promise<OrganizationEntity> {
+    const trimmed = identifier.trim();
+    if (trimmed.startsWith('org_')) {
+      const byPubId = await this.orgRepository.findByPubId(trimmed);
+      if (byPubId) return byPubId;
     }
-    return org;
+    const bySlug = await this.orgRepository.findBySlug(trimmed.toLowerCase());
+    if (bySlug) return bySlug;
+
+    const byPubId = await this.orgRepository.findByPubId(trimmed);
+    if (byPubId) return byPubId;
+
+    throw new NotFoundException(`Organization '${identifier}' not found`);
   }
 
-  public async resolveUser(identifier: string | number): Promise<UserEntity> {
-    if (typeof identifier === 'number') {
-      const user = await this.userRepository.findById(identifier);
-      if (user) return user;
-    }
-    const str = String(identifier).trim();
+  public async resolveUser(identifier: string): Promise<UserEntity> {
+    const str = identifier.trim();
     if (str.includes('@')) {
       const user = await this.userRepository.findByEmail(str);
       if (user) return user;
     }
     if (str.startsWith('usr_')) {
       const user = await this.userRepository.findByPubId(str);
-      if (user) return user;
-    }
-    const num = Number(str);
-    if (!isNaN(num) && Number.isInteger(num)) {
-      const user = await this.userRepository.findById(num);
       if (user) return user;
     }
     const userByPubId = await this.userRepository.findByPubId(str);
@@ -111,33 +109,6 @@ export class OrganizationService {
       ...org.sanitize(),
       memberCount: 1,
       currentUserRole: OrganizationRole.OWNER,
-    };
-  }
-
-  async getOrganizationById(
-    orgId: number,
-    userId?: number,
-  ): Promise<OrganizationResponseDto> {
-    const org = await this.orgRepository.findById(orgId);
-    if (!org) {
-      throw new NotFoundException(`Organization with ID ${orgId} not found`);
-    }
-
-    const memberCount = await this.memberRepository.countByOrg(orgId);
-    let currentUserRole: OrganizationRole | undefined;
-
-    if (userId) {
-      const membership = await this.memberRepository.findByOrgAndUser(
-        orgId,
-        userId,
-      );
-      currentUserRole = membership?.role;
-    }
-
-    return {
-      ...org.sanitize(),
-      memberCount,
-      currentUserRole,
     };
   }
 
@@ -241,7 +212,7 @@ export class OrganizationService {
   }
 
   async updateOrganization(
-    orgIdentifier: string | number,
+    orgIdentifier: string,
     userId: number,
     input: UpdateOrganizationInput,
   ): Promise<OrganizationResponseDto> {
@@ -290,7 +261,7 @@ export class OrganizationService {
   }
 
   async deleteOrganization(
-    orgIdentifier: string | number,
+    orgIdentifier: string,
     userId: number,
   ): Promise<DeleteOrganizationResponseDto> {
     const org = await this.resolveOrganization(orgIdentifier);
@@ -314,7 +285,7 @@ export class OrganizationService {
   }
 
   async listMembers(
-    orgIdentifier: string | number,
+    orgIdentifier: string,
     userId: number,
   ): Promise<OrganizationMemberResponseDto[]> {
     const org = await this.resolveOrganization(orgIdentifier);
@@ -546,11 +517,11 @@ export class OrganizationService {
 
   async leaveOrganization(
     userId: number,
-    organizationId: string | number,
+    organizationPubId: string,
   ): Promise<MemberActionResponseDto> {
     const user = await this.userRepository.findById(userId);
     return this.removeMember(userId, {
-      organizationId: String(organizationId),
+      organizationId: organizationPubId,
       userId: user?.pubId ?? String(userId),
     });
   }

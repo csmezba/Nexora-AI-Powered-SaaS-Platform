@@ -1,4 +1,4 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import {
   IsEmail,
   IsEnum,
@@ -80,16 +80,13 @@ export class RemoveMemberInput {
   description: 'Organization membership details',
 })
 export class OrganizationMemberResponseDto implements SanitizedOrganizationMember {
-  @Field(() => Int, { description: 'Internal membership identifier' })
   id!: number;
 
   @Field(() => String, { description: 'Public unique membership identifier' })
   pubId!: string;
 
-  @Field(() => Int, { description: 'Organization internal ID' })
   organizationId!: number;
 
-  @Field(() => Int, { description: 'User internal ID' })
   userId!: number;
 
   @Field(() => OrganizationRole, {

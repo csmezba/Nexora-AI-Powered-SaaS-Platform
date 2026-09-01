@@ -100,14 +100,14 @@ type Mutation {
 
   """Delete an organization (Requires OWNER role)"""
   deleteOrganization(
-    """Organization pubId, slug, or ID"""
-    id: String!
+    """Organization pubId or slug"""
+    pubId: String!
   ): DeleteOrganizationResponse!
 
   """Leave an organization as a member"""
   leaveOrganization(
-    """Organization pubId, slug, or ID"""
-    organizationId: String!
+    """Organization pubId or slug"""
+    organizationPubId: String!
   ): MemberActionResponse!
 
   """Authenticate user with email and password"""
@@ -127,9 +127,10 @@ type Mutation {
 
   """Update organization details (Requires OWNER or ADMIN role)"""
   updateOrganization(
-    """Organization pubId, slug, or ID"""
-    id: String!
     input: UpdateOrganizationInput!
+
+    """Organization pubId or slug"""
+    pubId: String!
   ): Organization!
 
   """
@@ -148,9 +149,6 @@ type Organization {
 
   """Organization description"""
   description: String
-
-  """Internal organization identifier"""
-  id: Int!
 
   """Organization logo URL"""
   logoUrl: String
@@ -173,14 +171,8 @@ type Organization {
 
 """Organization membership details"""
 type OrganizationMember {
-  """Internal membership identifier"""
-  id: Int!
-
   """Timestamp when member joined"""
   joinedAt: DateTime!
-
-  """Organization internal ID"""
-  organizationId: Int!
 
   """Public unique membership identifier"""
   pubId: String!
@@ -190,9 +182,6 @@ type OrganizationMember {
 
   """User profile of the member"""
   user: User
-
-  """User internal ID"""
-  userId: Int!
 }
 
 """Role of a member within an organization"""
@@ -217,27 +206,24 @@ type Query {
   """Fetch all organizations the authenticated user is a member of"""
   myOrganizations: [Organization!]!
 
-  """Fetch organization details by unique identifier (pubId, slug, or ID)"""
+  """Fetch organization details by unique pubId or slug"""
   organization(
-    """Organization pubId, slug, or ID"""
-    id: String!
+    """Organization pubId or slug"""
+    pubIdOrSlug: String!
   ): Organization!
 
-  """Fetch organization details by numeric ID"""
-  organizationById(id: Int!): Organization!
-
-  """Fetch organization details by unique pubId (e.g. org_xxxxxxxx)"""
-  organizationByPubId(pubId: String!): Organization!
-
   """Fetch organization details by unique slug"""
-  organizationBySlug(slug: String!): Organization!
+  organizationBySlug(
+    """Organization slug"""
+    slug: String!
+  ): Organization!
 
   """
   Fetch all members belonging to an organization with their user profiles
   """
   organizationMembers(
-    """Organization pubId, slug, or ID"""
-    organizationId: String!
+    """Organization pubId or slug"""
+    organizationPubId: String!
   ): [OrganizationMember!]!
 }
 
@@ -311,9 +297,6 @@ type User {
 
   """Full formatted user name"""
   fullName: String!
-
-  """Internal user identifier"""
-  id: Int!
 
   """User last name"""
   lastName: String

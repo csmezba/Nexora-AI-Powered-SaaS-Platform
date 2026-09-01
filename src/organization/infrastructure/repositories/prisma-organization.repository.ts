@@ -115,22 +115,15 @@ export class PrismaOrganizationRepository implements IOrganizationRepository {
     return record ? this.toEntity(record) : null;
   }
 
-  async findByIdOrPubIdOrSlug(identifier: string | number): Promise<OrganizationEntity | null> {
-    if (typeof identifier === 'number') {
-      return this.findById(identifier);
-    }
-    const num = Number(identifier);
-    if (!isNaN(num) && Number.isInteger(num)) {
-      const byId = await this.findById(num);
-      if (byId) return byId;
-    }
-    if (identifier.startsWith('org_')) {
-      const byPubId = await this.findByPubId(identifier);
+  async findByPubIdOrSlug(identifier: string): Promise<OrganizationEntity | null> {
+    const trimmed = identifier.trim();
+    if (trimmed.startsWith('org_')) {
+      const byPubId = await this.findByPubId(trimmed);
       if (byPubId) return byPubId;
     }
-    const bySlug = await this.findBySlug(identifier);
+    const bySlug = await this.findBySlug(trimmed);
     if (bySlug) return bySlug;
-    return this.findByPubId(identifier);
+    return this.findByPubId(trimmed);
   }
 
   async findAllByUserId(userId: number): Promise<OrganizationEntity[]> {

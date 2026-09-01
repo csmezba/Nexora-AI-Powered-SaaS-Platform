@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service.js';
+import { PrismaService } from '../../../prisma/prisma.service.js';
 import { OrganizationMemberEntity } from '../../domain/entities/organization-member.entity.js';
-import { UserEntity } from '../../domain/entities/user.entity.js';
+import { UserEntity } from '../../../user/domain/entities/user.entity.js';
 import { OrganizationRole } from '../../domain/enums/organization-role.enum.js';
 import type {
   CreateOrganizationMemberData,

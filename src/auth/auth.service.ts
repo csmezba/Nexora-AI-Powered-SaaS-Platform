@@ -8,23 +8,23 @@ import {
 import {
   USER_REPOSITORY,
   type IUserRepository,
-} from '../domain/repositories/user-repository.interface.js';
+} from '../user/domain/repositories/user-repository.interface.js';
 import {
   PASSWORD_HASHER,
   type IPasswordHasher,
-} from '../domain/services/password-hasher.interface.js';
+} from './domain/services/password-hasher.interface.js';
 import {
   TOKEN_SERVICE,
   type ITokenService,
   type TokenPayload,
-} from '../domain/services/token-service.interface.js';
+} from './domain/services/token-service.interface.js';
 import {
   type AuthResponseDto,
   type LoginDto,
   type RefreshTokenDto,
   type RegisterDto,
 } from './dto/auth.dto.js';
-import type { SanitizedUser } from '../domain/entities/user.entity.js';
+import type { SanitizedUser } from '../user/domain/entities/user.entity.js';
 
 @Injectable()
 export class AuthService {

@@ -9,16 +9,16 @@ import {
 import {
   ORGANIZATION_REPOSITORY,
   type IOrganizationRepository,
-} from '../domain/repositories/organization-repository.interface.js';
+} from './domain/repositories/organization-repository.interface.js';
 import {
   ORGANIZATION_MEMBER_REPOSITORY,
   type IOrganizationMemberRepository,
-} from '../domain/repositories/organization-member-repository.interface.js';
+} from './domain/repositories/organization-member-repository.interface.js';
 import {
   USER_REPOSITORY,
   type IUserRepository,
-} from '../domain/repositories/user-repository.interface.js';
-import { OrganizationRole } from '../domain/enums/organization-role.enum.js';
+} from '../user/domain/repositories/user-repository.interface.js';
+import { OrganizationRole } from './domain/enums/organization-role.enum.js';
 import {
   CreateOrganizationInput,
   DeleteOrganizationResponseDto,

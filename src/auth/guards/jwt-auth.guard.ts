@@ -12,11 +12,11 @@ import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
 import {
   TOKEN_SERVICE,
   type ITokenService,
-} from '../../domain/services/token-service.interface.js';
+} from '../domain/services/token-service.interface.js';
 import {
   USER_REPOSITORY,
   type IUserRepository,
-} from '../../domain/repositories/user-repository.interface.js';
+} from '../../user/domain/repositories/user-repository.interface.js';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {

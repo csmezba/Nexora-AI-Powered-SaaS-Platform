@@ -3,8 +3,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { UserModule } from './user/user.module.js';
 import { AuthModule } from './auth/auth.module.js';
-
 import { OrganizationModule } from './organization/organization.module.js';
 
 @Module({
@@ -18,6 +18,7 @@ import { OrganizationModule } from './organization/organization.module.js';
       context: ({ req, res }: { req: unknown; res: unknown }) => ({ req, res }),
     }),
     PrismaModule,
+    UserModule,
     AuthModule,
     OrganizationModule,
   ],

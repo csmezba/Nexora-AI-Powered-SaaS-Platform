@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service.js';
+import { PrismaService } from '../../../prisma/prisma.service.js';
 import { OrganizationEntity } from '../../domain/entities/organization.entity.js';
 import type {
   CreateOrganizationData,

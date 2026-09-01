@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { SanitizedUser } from '../../domain/entities/user.entity.js';
+import { SanitizedUser } from '../../user/domain/entities/user.entity.js';
 
 export const CurrentUser = createParamDecorator(
   (data: keyof SanitizedUser | undefined, ctx: ExecutionContext) => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { JwtService } from '@nestjs/jwt';
-import { JwtTokenService } from '../../../../src/infrastructure/services/jwt-token.service.js';
-import { TokenPayload } from '../../../../src/domain/services/token-service.interface.js';
+import { JwtTokenService } from '../../../../../src/auth/infrastructure/services/jwt-token.service.js';
+import { TokenPayload } from '../../../../../src/auth/domain/services/token-service.interface.js';
 
 describe('JwtTokenService', () => {
   const jwtService = new JwtService({});

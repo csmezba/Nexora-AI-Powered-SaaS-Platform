@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BcryptPasswordHasher } from '../../../../src/infrastructure/services/bcrypt-password.hasher.js';
+import { BcryptPasswordHasher } from '../../../../../src/auth/infrastructure/services/bcrypt-password.hasher.js';
 
 describe('BcryptPasswordHasher', () => {
   const hasher = new BcryptPasswordHasher();

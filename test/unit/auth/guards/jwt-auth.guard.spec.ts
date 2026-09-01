@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtAuthGuard } from '../../../../src/auth/guards/jwt-auth.guard.js';
-import { UserEntity } from '../../../../src/domain/entities/user.entity.js';
+import { UserEntity } from '../../../../src/user/domain/entities/user.entity.js';
 
 describe('JwtAuthGuard', () => {
   const mockReflector = {

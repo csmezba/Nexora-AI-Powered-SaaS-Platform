@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { PrismaUserRepository } from '../../../../src/infrastructure/repositories/prisma-user.repository.js';
-import { PrismaService } from '../../../../src/prisma/prisma.service.js';
+import { PrismaUserRepository } from '../../../../../src/user/infrastructure/repositories/prisma-user.repository.js';
+import { PrismaService } from '../../../../../src/prisma/prisma.service.js';
 
 describe('PrismaUserRepository', () => {
   let repository: PrismaUserRepository;

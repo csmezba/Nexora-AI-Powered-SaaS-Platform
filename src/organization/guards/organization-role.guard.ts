@@ -9,11 +9,11 @@ import {
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { ORG_ROLES_KEY } from '../decorators/require-org-role.decorator.js';
-import { OrganizationRole } from '../../domain/enums/organization-role.enum.js';
+import { OrganizationRole } from '../domain/enums/organization-role.enum.js';
 import {
   ORGANIZATION_MEMBER_REPOSITORY,
   type IOrganizationMemberRepository,
-} from '../../domain/repositories/organization-member-repository.interface.js';
+} from '../domain/repositories/organization-member-repository.interface.js';
 
 @Injectable()
 export class OrganizationRoleGuard implements CanActivate {

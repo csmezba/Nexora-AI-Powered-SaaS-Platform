@@ -1,5 +1,5 @@
 import { OrganizationMemberEntity } from '../entities/organization-member.entity.js';
-import { UserEntity } from '../entities/user.entity.js';
+import { UserEntity } from '../../../user/domain/entities/user.entity.js';
 import { OrganizationRole } from '../enums/organization-role.enum.js';
 
 export const ORGANIZATION_MEMBER_REPOSITORY = Symbol(

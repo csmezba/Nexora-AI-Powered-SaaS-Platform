@@ -5,10 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from '../../../src/auth/auth.service.js';
-import { UserEntity } from '../../../src/domain/entities/user.entity.js';
-import { IUserRepository } from '../../../src/domain/repositories/user-repository.interface.js';
-import { IPasswordHasher } from '../../../src/domain/services/password-hasher.interface.js';
-import { ITokenService } from '../../../src/domain/services/token-service.interface.js';
+import { UserEntity } from '../../../src/user/domain/entities/user.entity.js';
+import { IUserRepository } from '../../../src/user/domain/repositories/user-repository.interface.js';
+import { IPasswordHasher } from '../../../src/auth/domain/services/password-hasher.interface.js';
+import { ITokenService } from '../../../src/auth/domain/services/token-service.interface.js';
 
 describe('AuthService', () => {
   let authService: AuthService;

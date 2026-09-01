@@ -6,9 +6,9 @@ import {
   IsNumber,
   IsOptional,
 } from 'class-validator';
-import { OrganizationRole } from '../../domain/enums/organization-role.enum.js';
+import { OrganizationRole } from '../domain/enums/organization-role.enum.js';
 import { UserResponseDto } from '../../auth/dto/auth.dto.js';
-import type { SanitizedOrganizationMember } from '../../domain/entities/organization-member.entity.js';
+import type { SanitizedOrganizationMember } from '../domain/entities/organization-member.entity.js';
 
 @InputType('AddOrganizationMemberInput', {
   description: 'Input payload for adding a member to an organization',

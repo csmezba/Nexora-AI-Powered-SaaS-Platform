@@ -7,8 +7,8 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { OrganizationRole } from '../../domain/enums/organization-role.enum.js';
-import type { SanitizedOrganization } from '../../domain/entities/organization.entity.js';
+import { OrganizationRole } from '../domain/enums/organization-role.enum.js';
+import type { SanitizedOrganization } from '../domain/entities/organization.entity.js';
 
 @InputType('CreateOrganizationInput', {
   description: 'Input payload for creating a new organization',

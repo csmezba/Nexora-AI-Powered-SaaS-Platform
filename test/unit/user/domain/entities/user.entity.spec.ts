@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { UserEntity } from '../../../../src/domain/entities/user.entity.js';
+import { UserEntity } from '../../../../../src/user/domain/entities/user.entity.js';
 
 describe('UserEntity (Domain Entity)', () => {
   const baseProps = {

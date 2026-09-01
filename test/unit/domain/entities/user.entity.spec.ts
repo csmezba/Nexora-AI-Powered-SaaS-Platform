@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { UserEntity } from '../../../../src/domain/entities/user.entity.js';
-import { UserRole } from '../../../../src/domain/enums/user-role.enum.js';
-import { UserStatus } from '../../../../src/domain/enums/user-status.enum.js';
 
 describe('UserEntity (Domain Entity)', () => {
   const baseProps = {
@@ -10,8 +8,6 @@ describe('UserEntity (Domain Entity)', () => {
     passwordHash: '$2a$10$hashedpassword',
     firstName: 'John',
     lastName: 'Doe',
-    role: UserRole.USER,
-    status: UserStatus.ACTIVE,
     refreshTokenHash: null,
     createdAt: new Date('2026-01-01T00:00:00Z'),
     updatedAt: new Date('2026-01-01T00:00:00Z'),
@@ -23,10 +19,6 @@ describe('UserEntity (Domain Entity)', () => {
     expect(user.id).toBe(1);
     expect(user.email).toBe('test.user@example.com');
     expect(user.fullName).toBe('John Doe');
-    expect(user.role).toBe(UserRole.USER);
-    expect(user.status).toBe(UserStatus.ACTIVE);
-    expect(user.isActive()).toBe(true);
-    expect(user.isSuspended()).toBe(false);
   });
 
   it('should format fullName correctly when names are missing', () => {
@@ -37,18 +29,6 @@ describe('UserEntity (Domain Entity)', () => {
     });
 
     expect(user.fullName).toBe('test.user@example.com');
-  });
-
-  it('should check single role and multiple roles correctly', () => {
-    const user = new UserEntity({
-      ...baseProps,
-      role: UserRole.MANAGER,
-    });
-
-    expect(user.hasRole(UserRole.MANAGER)).toBe(true);
-    expect(user.hasRole(UserRole.ADMIN)).toBe(false);
-    expect(user.hasAnyRole([UserRole.ADMIN, UserRole.MANAGER])).toBe(true);
-    expect(user.hasAnyRole([UserRole.ADMIN, UserRole.USER])).toBe(false);
   });
 
   it('should update profile and update timestamp', () => {
@@ -72,18 +52,6 @@ describe('UserEntity (Domain Entity)', () => {
     expect(() => user.updatePassword('')).toThrowError('Password hash cannot be empty');
   });
 
-  it('should change status and role', () => {
-    const user = new UserEntity(baseProps);
-
-    user.changeRole(UserRole.ADMIN);
-    expect(user.role).toBe(UserRole.ADMIN);
-
-    user.changeStatus(UserStatus.SUSPENDED);
-    expect(user.status).toBe(UserStatus.SUSPENDED);
-    expect(user.isActive()).toBe(false);
-    expect(user.isSuspended()).toBe(true);
-  });
-
   it('should set and clear refresh token hash', () => {
     const user = new UserEntity(baseProps);
 
@@ -105,8 +73,6 @@ describe('UserEntity (Domain Entity)', () => {
     expect(sanitized.id).toBe(1);
     expect(sanitized.email).toBe('test.user@example.com');
     expect(sanitized.fullName).toBe('John Doe');
-    expect(sanitized.role).toBe(UserRole.USER);
-    expect(sanitized.status).toBe(UserStatus.ACTIVE);
     expect((sanitized as unknown as Record<string, unknown>)['passwordHash']).toBeUndefined();
     expect((sanitized as unknown as Record<string, unknown>)['refreshTokenHash']).toBeUndefined();
   });

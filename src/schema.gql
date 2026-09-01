@@ -64,12 +64,6 @@ type Mutation {
 }
 
 type Query {
-  """Admin-only operation"""
-  adminOnly: MessageResponse!
-
-  """Manager and Admin operation"""
-  managerOnly: MessageResponse!
-
   """Fetch current logged in user profile"""
   me: User!
 }
@@ -93,9 +87,6 @@ input RegisterInput {
 
   """Password (minimum 6 characters)"""
   password: String!
-
-  """User role (admin, manager, user)"""
-  role: UserRole
 }
 
 """Sanitized user profile information"""
@@ -118,26 +109,6 @@ type User {
   """User last name"""
   lastName: String
 
-  """User authorization role"""
-  role: UserRole!
-
-  """User account status"""
-  status: UserStatus!
-
   """Account last updated timestamp"""
   updatedAt: DateTime!
-}
-
-"""User role permissions in the application"""
-enum UserRole {
-  ADMIN
-  MANAGER
-  USER
-}
-
-"""User status states in the application"""
-enum UserStatus {
-  ACTIVE
-  INACTIVE
-  SUSPENDED
 }

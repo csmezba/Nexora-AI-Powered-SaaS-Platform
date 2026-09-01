@@ -29,7 +29,7 @@ export class JwtTokenService implements ITokenService {
 
   async generateRefreshToken(payload: TokenPayload): Promise<string> {
     return this.jwtService.signAsync(
-      { sub: payload.sub, email: payload.email, role: payload.role },
+      { sub: payload.sub, email: payload.email },
       {
         secret: this.refreshSecret,
         expiresIn: this.refreshExpiresIn,

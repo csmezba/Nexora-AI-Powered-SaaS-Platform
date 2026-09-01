@@ -5,21 +5,17 @@ import {
   AuthResponseDto,
   LoginDto,
   LogoutResponseDto,
-  MessageResponseDto,
   RefreshTokenDto,
   RegisterDto,
   UserResponseDto,
 } from './dto/auth.dto.js';
 import { Public } from './decorators/public.decorator.js';
 import { CurrentUser } from './decorators/current-user.decorator.js';
-import { Roles } from './decorators/roles.decorator.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
-import { RolesGuard } from './guards/roles.guard.js';
 import type { SanitizedUser } from '../domain/entities/user.entity.js';
-import { UserRole } from '../domain/enums/user-role.enum.js';
 
 @Resolver()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
@@ -50,23 +46,5 @@ export class AuthResolver {
   @Query(() => UserResponseDto, { description: 'Fetch current logged in user profile' })
   async me(@CurrentUser() user: SanitizedUser): Promise<UserResponseDto> {
     return user;
-  }
-
-  @Query(() => MessageResponseDto, { description: 'Admin-only operation' })
-  @Roles(UserRole.ADMIN)
-  async adminOnly(@CurrentUser() user: SanitizedUser): Promise<MessageResponseDto> {
-    return {
-      message: 'Welcome Admin. You have access to administrative operations.',
-      user,
-    };
-  }
-
-  @Query(() => MessageResponseDto, { description: 'Manager and Admin operation' })
-  @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  async managerOnly(@CurrentUser() user: SanitizedUser): Promise<MessageResponseDto> {
-    return {
-      message: 'Welcome Manager. You have access to management operations.',
-      user,
-    };
   }
 }

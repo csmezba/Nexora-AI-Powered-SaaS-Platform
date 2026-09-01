@@ -1,8 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { PrismaUserRepository } from '../../../../src/infrastructure/repositories/prisma-user.repository.js';
 import { PrismaService } from '../../../../src/prisma/prisma.service.js';
-import { UserRole } from '../../../../src/domain/enums/user-role.enum.js';
-import { UserStatus } from '../../../../src/domain/enums/user-status.enum.js';
 
 describe('PrismaUserRepository', () => {
   let repository: PrismaUserRepository;
@@ -19,8 +17,6 @@ describe('PrismaUserRepository', () => {
     password: '$2a$10$hashedpassword',
     firstName: 'Test',
     lastName: 'User',
-    role: 'admin',
-    status: 'active',
     refreshTokenHash: null,
     createdAt: new Date('2026-01-01T00:00:00.000Z'),
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
@@ -56,8 +52,6 @@ describe('PrismaUserRepository', () => {
     expect(user).not.toBeNull();
     expect(user?.id).toBe(1);
     expect(user?.email).toBe('test@nexora.ai');
-    expect(user?.role).toBe(UserRole.ADMIN);
-    expect(user?.status).toBe(UserStatus.ACTIVE);
   });
 
   it('should return null if user not found by id', async () => {
@@ -87,8 +81,6 @@ describe('PrismaUserRepository', () => {
       passwordHash: '$2a$10$hashedpassword',
       firstName: 'Test',
       lastName: 'User',
-      role: UserRole.ADMIN,
-      status: UserStatus.ACTIVE,
     });
 
     expect(created.id).toBe(1);

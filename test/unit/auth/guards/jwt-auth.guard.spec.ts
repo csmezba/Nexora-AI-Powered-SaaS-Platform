@@ -3,8 +3,6 @@ import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtAuthGuard } from '../../../../src/auth/guards/jwt-auth.guard.js';
 import { UserEntity } from '../../../../src/domain/entities/user.entity.js';
-import { UserRole } from '../../../../src/domain/enums/user-role.enum.js';
-import { UserStatus } from '../../../../src/domain/enums/user-status.enum.js';
 
 describe('JwtAuthGuard', () => {
   const mockReflector = {
@@ -73,7 +71,6 @@ describe('JwtAuthGuard', () => {
     mockTokenService.verifyAccessToken.mockResolvedValue({
       sub: 1,
       email: 'user@nexora.ai',
-      role: UserRole.USER,
     });
 
     const userEntity = UserEntity.reconstitute({
@@ -82,8 +79,6 @@ describe('JwtAuthGuard', () => {
       passwordHash: 'hash',
       firstName: 'Alice',
       lastName: 'Smith',
-      role: UserRole.USER,
-      status: UserStatus.ACTIVE,
       refreshTokenHash: null,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -96,25 +91,15 @@ describe('JwtAuthGuard', () => {
     expect(req['user']).toEqual(userEntity.sanitize());
   });
 
-  it('should reject if user account is suspended', async () => {
+  it('should reject if user no longer exists', async () => {
     mockReflector.getAllAndOverride.mockReturnValue(false);
     const { context } = createMockContext('Bearer valid-jwt-token');
 
-    mockTokenService.verifyAccessToken.mockResolvedValue({ sub: 2 });
-    const suspendedUser = UserEntity.reconstitute({
-      id: 2,
-      email: 'bad@nexora.ai',
-      passwordHash: 'hash',
-      role: UserRole.USER,
-      status: UserStatus.SUSPENDED,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    mockUserRepository.findById.mockResolvedValue(suspendedUser);
+    mockTokenService.verifyAccessToken.mockResolvedValue({ sub: 999 });
+    mockUserRepository.findById.mockResolvedValue(null);
 
     await expect(guard.canActivate(context)).rejects.toThrowError(
-      'User account is inactive or suspended',
+      'User no longer exists',
     );
   });
 
@@ -152,7 +137,6 @@ describe('JwtAuthGuard', () => {
     mockTokenService.verifyAccessToken.mockResolvedValue({
       sub: 1,
       email: 'gql@nexora.ai',
-      role: UserRole.USER,
     });
 
     const userEntity = UserEntity.reconstitute({
@@ -161,8 +145,6 @@ describe('JwtAuthGuard', () => {
       passwordHash: 'hash',
       firstName: 'GraphQL',
       lastName: 'User',
-      role: UserRole.USER,
-      status: UserStatus.ACTIVE,
       refreshTokenHash: null,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -175,4 +157,3 @@ describe('JwtAuthGuard', () => {
     expect(req['user']).toEqual(userEntity.sanitize());
   });
 });
-

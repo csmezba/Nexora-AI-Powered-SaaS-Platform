@@ -25,8 +25,6 @@ import {
   type RegisterDto,
 } from './dto/auth.dto.js';
 import type { SanitizedUser } from '../domain/entities/user.entity.js';
-import { UserRole } from '../domain/enums/user-role.enum.js';
-import { UserStatus } from '../domain/enums/user-status.enum.js';
 
 @Injectable()
 export class AuthService {
@@ -48,14 +46,11 @@ export class AuthService {
       passwordHash,
       firstName: dto.firstName,
       lastName: dto.lastName,
-      role: dto.role ?? UserRole.USER,
-      status: UserStatus.ACTIVE,
     });
 
     const tokenPayload: TokenPayload = {
       sub: user.id,
       email: user.email,
-      role: user.role,
     };
 
     const tokens = await this.tokenService.generateTokens(tokenPayload);
@@ -85,14 +80,9 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    if (!user.isActive()) {
-      throw new UnauthorizedException('User account is inactive or suspended');
-    }
-
     const tokenPayload: TokenPayload = {
       sub: user.id,
       email: user.email,
-      role: user.role,
     };
 
     const tokens = await this.tokenService.generateTokens(tokenPayload);
@@ -125,14 +115,9 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token has been revoked or invalidated');
     }
 
-    if (!user.isActive()) {
-      throw new UnauthorizedException('User account is inactive or suspended');
-    }
-
     const tokenPayload: TokenPayload = {
       sub: user.id,
       email: user.email,
-      role: user.role,
     };
 
     const tokens = await this.tokenService.generateTokens(tokenPayload);

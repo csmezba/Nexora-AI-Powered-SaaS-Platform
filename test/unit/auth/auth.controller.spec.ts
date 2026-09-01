@@ -1,8 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { AuthController } from '../../../src/auth/auth.controller.js';
 import { AuthService } from '../../../src/auth/auth.service.js';
-import { UserRole } from '../../../src/domain/enums/user-role.enum.js';
-import { UserStatus } from '../../../src/domain/enums/user-status.enum.js';
 import { SanitizedUser } from '../../../src/domain/entities/user.entity.js';
 
 describe('AuthController', () => {
@@ -14,8 +12,6 @@ describe('AuthController', () => {
     email: 'admin@nexora.ai',
     firstName: 'Admin',
     lastName: 'User',
-    role: UserRole.ADMIN,
-    status: UserStatus.ACTIVE,
     fullName: 'Admin User',
     createdAt: new Date('2026-01-01'),
     updatedAt: new Date('2026-01-01'),
@@ -82,17 +78,5 @@ describe('AuthController', () => {
   it('should return profile on getProfile', async () => {
     const profile = await controller.getProfile(mockSanitizedUser);
     expect(profile).toEqual(mockSanitizedUser);
-  });
-
-  it('should return admin greeting on adminOnly', async () => {
-    const result = await controller.adminOnly(mockSanitizedUser);
-    expect(result.message).toContain('Welcome Admin');
-    expect(result.user).toEqual(mockSanitizedUser);
-  });
-
-  it('should return manager greeting on managerOnly', async () => {
-    const result = await controller.managerOnly(mockSanitizedUser);
-    expect(result.message).toContain('Welcome Manager');
-    expect(result.user).toEqual(mockSanitizedUser);
   });
 });

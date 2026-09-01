@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service.js';
 import { UserEntity } from '../../domain/entities/user.entity.js';
-import { UserRole } from '../../domain/enums/user-role.enum.js';
-import { UserStatus } from '../../domain/enums/user-status.enum.js';
 import type {
   CreateUserData,
   IUserRepository,
@@ -15,8 +13,6 @@ interface PrismaUserRecord {
   password: string;
   firstName?: string | null;
   lastName?: string | null;
-  role: string;
-  status: string;
   refreshTokenHash?: string | null;
   createdAt: string | Date;
   updatedAt: string | Date;
@@ -50,8 +46,6 @@ export class PrismaUserRepository implements IUserRepository {
       passwordHash: record.password,
       firstName: record.firstName ?? null,
       lastName: record.lastName ?? null,
-      role: record.role as UserRole,
-      status: record.status as UserStatus,
       refreshTokenHash: record.refreshTokenHash ?? null,
       createdAt: new Date(record.createdAt),
       updatedAt: new Date(record.updatedAt),
@@ -78,8 +72,6 @@ export class PrismaUserRepository implements IUserRepository {
       password: data.passwordHash,
       firstName: data.firstName ?? null,
       lastName: data.lastName ?? null,
-      role: data.role ?? UserRole.USER,
-      status: data.status ?? UserStatus.ACTIVE,
       refreshTokenHash: null,
       createdAt: now,
       updatedAt: now,
@@ -94,8 +86,6 @@ export class PrismaUserRepository implements IUserRepository {
     if (data.passwordHash !== undefined) updatePayload['password'] = data.passwordHash;
     if (data.firstName !== undefined) updatePayload['firstName'] = data.firstName;
     if (data.lastName !== undefined) updatePayload['lastName'] = data.lastName;
-    if (data.role !== undefined) updatePayload['role'] = data.role;
-    if (data.status !== undefined) updatePayload['status'] = data.status;
     if (data.refreshTokenHash !== undefined) updatePayload['refreshTokenHash'] = data.refreshTokenHash;
 
     updatePayload['updatedAt'] = new Date().toISOString();

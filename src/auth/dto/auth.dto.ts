@@ -1,7 +1,5 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
-import { UserRole } from '../../domain/enums/user-role.enum.js';
-import { UserStatus } from '../../domain/enums/user-status.enum.js';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 import type { SanitizedUser } from '../../domain/entities/user.entity.js';
 
 @InputType('RegisterInput', { description: 'Input payload for user registration' })
@@ -26,11 +24,6 @@ export class RegisterDto {
   @IsString()
   @IsOptional()
   lastName?: string;
-
-  @Field(() => UserRole, { nullable: true, description: 'User role (admin, manager, user)' })
-  @IsEnum(UserRole, { message: 'Role must be one of: admin, manager, user' })
-  @IsOptional()
-  role?: UserRole;
 }
 
 @InputType('LoginInput', { description: 'Input payload for user login' })
@@ -71,12 +64,6 @@ export class UserResponseDto implements SanitizedUser {
   @Field(() => String, { description: 'Full formatted user name' })
   fullName!: string;
 
-  @Field(() => UserRole, { description: 'User authorization role' })
-  role!: UserRole;
-
-  @Field(() => UserStatus, { description: 'User account status' })
-  status!: UserStatus;
-
   @Field(() => Date, { description: 'Account creation timestamp' })
   createdAt!: Date;
 
@@ -116,4 +103,3 @@ export class MessageResponseDto {
   @Field(() => UserResponseDto, { nullable: true, description: 'Associated user profile' })
   user?: UserResponseDto;
 }
-

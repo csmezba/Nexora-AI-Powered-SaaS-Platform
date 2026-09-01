@@ -1,6 +1,4 @@
 import { UserEntity } from '../entities/user.entity.js';
-import { UserRole } from '../enums/user-role.enum.js';
-import { UserStatus } from '../enums/user-status.enum.js';
 
 export const USER_REPOSITORY = Symbol('IUserRepository');
 
@@ -9,16 +7,12 @@ export interface CreateUserData {
   passwordHash: string;
   firstName?: string | null;
   lastName?: string | null;
-  role?: UserRole;
-  status?: UserStatus;
 }
 
 export interface UpdateUserData {
   passwordHash?: string;
   firstName?: string | null;
   lastName?: string | null;
-  role?: UserRole;
-  status?: UserStatus;
   refreshTokenHash?: string | null;
 }
 

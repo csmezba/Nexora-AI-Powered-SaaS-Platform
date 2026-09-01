@@ -1,14 +1,9 @@
-import { UserRole } from '../enums/user-role.enum.js';
-import { UserStatus } from '../enums/user-status.enum.js';
-
 export interface UserEntityProps {
   id: number;
   email: string;
   passwordHash: string;
   firstName?: string | null;
   lastName?: string | null;
-  role: UserRole;
-  status: UserStatus;
   refreshTokenHash?: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -19,8 +14,6 @@ export interface SanitizedUser {
   email: string;
   firstName: string | null;
   lastName: string | null;
-  role: UserRole;
-  status: UserStatus;
   fullName: string;
   createdAt: Date;
   updatedAt: Date;
@@ -32,8 +25,6 @@ export class UserEntity {
   private _passwordHash: string;
   private _firstName: string | null;
   private _lastName: string | null;
-  private _role: UserRole;
-  private _status: UserStatus;
   private _refreshTokenHash: string | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
@@ -44,8 +35,6 @@ export class UserEntity {
     this._passwordHash = props.passwordHash;
     this._firstName = props.firstName ?? null;
     this._lastName = props.lastName ?? null;
-    this._role = props.role;
-    this._status = props.status;
     this._refreshTokenHash = props.refreshTokenHash ?? null;
     this._createdAt = props.createdAt;
     this._updatedAt = props.updatedAt;
@@ -71,14 +60,6 @@ export class UserEntity {
     return this._lastName;
   }
 
-  public get role(): UserRole {
-    return this._role;
-  }
-
-  public get status(): UserStatus {
-    return this._status;
-  }
-
   public get refreshTokenHash(): string | null {
     return this._refreshTokenHash;
   }
@@ -94,22 +75,6 @@ export class UserEntity {
   public get fullName(): string {
     const parts = [this._firstName, this._lastName].filter(Boolean);
     return parts.length > 0 ? parts.join(' ') : this._email;
-  }
-
-  public hasRole(role: UserRole): boolean {
-    return this._role === role;
-  }
-
-  public hasAnyRole(roles: UserRole[]): boolean {
-    return roles.includes(this._role);
-  }
-
-  public isActive(): boolean {
-    return this._status === UserStatus.ACTIVE;
-  }
-
-  public isSuspended(): boolean {
-    return this._status === UserStatus.SUSPENDED;
   }
 
   public updatePassword(newPasswordHash: string): void {
@@ -130,16 +95,6 @@ export class UserEntity {
     this._updatedAt = new Date();
   }
 
-  public changeRole(newRole: UserRole): void {
-    this._role = newRole;
-    this._updatedAt = new Date();
-  }
-
-  public changeStatus(newStatus: UserStatus): void {
-    this._status = newStatus;
-    this._updatedAt = new Date();
-  }
-
   public setRefreshTokenHash(hash: string | null): void {
     this._refreshTokenHash = hash;
     this._updatedAt = new Date();
@@ -151,8 +106,6 @@ export class UserEntity {
       email: this._email,
       firstName: this._firstName,
       lastName: this._lastName,
-      role: this._role,
-      status: this._status,
       fullName: this.fullName,
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,

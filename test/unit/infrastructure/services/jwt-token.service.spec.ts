@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { JwtService } from '@nestjs/jwt';
 import { JwtTokenService } from '../../../../src/infrastructure/services/jwt-token.service.js';
-import { UserRole } from '../../../../src/domain/enums/user-role.enum.js';
 import { TokenPayload } from '../../../../src/domain/services/token-service.interface.js';
 
 describe('JwtTokenService', () => {
@@ -11,7 +10,6 @@ describe('JwtTokenService', () => {
   const payload: TokenPayload = {
     sub: 42,
     email: 'test@nexora.ai',
-    role: UserRole.ADMIN,
   };
 
   it('should generate access and refresh token pair', async () => {
@@ -29,7 +27,6 @@ describe('JwtTokenService', () => {
 
     expect(decoded.sub).toBe(payload.sub);
     expect(decoded.email).toBe(payload.email);
-    expect(decoded.role).toBe(payload.role);
   });
 
   it('should verify and decode valid refresh token', async () => {
@@ -38,7 +35,6 @@ describe('JwtTokenService', () => {
 
     expect(decoded.sub).toBe(payload.sub);
     expect(decoded.email).toBe(payload.email);
-    expect(decoded.role).toBe(payload.role);
   });
 
   it('should reject invalid or tampered tokens', async () => {

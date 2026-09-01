@@ -1,8 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { AuthResolver } from '../../../src/auth/auth.resolver.js';
 import { AuthService } from '../../../src/auth/auth.service.js';
-import { UserRole } from '../../../src/domain/enums/user-role.enum.js';
-import { UserStatus } from '../../../src/domain/enums/user-status.enum.js';
 import { SanitizedUser } from '../../../src/domain/entities/user.entity.js';
 
 describe('AuthResolver', () => {
@@ -14,8 +12,6 @@ describe('AuthResolver', () => {
     email: 'admin@nexora.ai',
     firstName: 'Admin',
     lastName: 'User',
-    role: UserRole.ADMIN,
-    status: UserStatus.ACTIVE,
     fullName: 'Admin User',
     createdAt: new Date('2026-01-01'),
     updatedAt: new Date('2026-01-01'),
@@ -82,17 +78,5 @@ describe('AuthResolver', () => {
   it('should return user for me query', async () => {
     const profile = await resolver.me(mockSanitizedUser);
     expect(profile).toEqual(mockSanitizedUser);
-  });
-
-  it('should return admin greeting for adminOnly query', async () => {
-    const result = await resolver.adminOnly(mockSanitizedUser);
-    expect(result.message).toContain('Welcome Admin');
-    expect(result.user).toEqual(mockSanitizedUser);
-  });
-
-  it('should return manager greeting for managerOnly query', async () => {
-    const result = await resolver.managerOnly(mockSanitizedUser);
-    expect(result.message).toContain('Welcome Manager');
-    expect(result.user).toEqual(mockSanitizedUser);
   });
 });

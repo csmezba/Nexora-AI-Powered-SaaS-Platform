@@ -2,8 +2,6 @@ import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { ConflictException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../../../src/auth/auth.service.js';
 import { UserEntity } from '../../../src/domain/entities/user.entity.js';
-import { UserRole } from '../../../src/domain/enums/user-role.enum.js';
-import { UserStatus } from '../../../src/domain/enums/user-status.enum.js';
 import { IUserRepository } from '../../../src/domain/repositories/user-repository.interface.js';
 import { IPasswordHasher } from '../../../src/domain/services/password-hasher.interface.js';
 import { ITokenService } from '../../../src/domain/services/token-service.interface.js';
@@ -20,8 +18,6 @@ describe('AuthService', () => {
     passwordHash: '$2a$10$hashedpw',
     firstName: 'John',
     lastName: 'Doe',
-    role: UserRole.USER,
-    status: UserStatus.ACTIVE,
     refreshTokenHash: '$2a$10$hashedrefresh',
     createdAt: new Date('2026-01-01'),
     updatedAt: new Date('2026-01-01'),
@@ -84,8 +80,6 @@ describe('AuthService', () => {
         passwordHash: 'hashed_Password123!',
         firstName: 'John',
         lastName: 'Doe',
-        role: UserRole.USER,
-        status: UserStatus.ACTIVE,
       });
     });
 
@@ -146,28 +140,6 @@ describe('AuthService', () => {
         }),
       ).rejects.toThrowError(UnauthorizedException);
     });
-
-    it('should throw UnauthorizedException if user is inactive', async () => {
-      const inactiveUser = UserEntity.reconstitute({
-        id: 1,
-        email: 'user@example.com',
-        passwordHash: '$2a$10$hashedpw',
-        role: UserRole.USER,
-        status: UserStatus.INACTIVE,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-
-      vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(inactiveUser);
-      vi.mocked(mockPasswordHasher.compare).mockResolvedValue(true);
-
-      await expect(
-        authService.login({
-          email: 'user@example.com',
-          password: 'Password123!',
-        }),
-      ).rejects.toThrowError('User account is inactive or suspended');
-    });
   });
 
   describe('refreshToken', () => {
@@ -175,7 +147,6 @@ describe('AuthService', () => {
       vi.mocked(mockTokenService.verifyRefreshToken).mockResolvedValue({
         sub: 1,
         email: 'user@example.com',
-        role: UserRole.USER,
       });
       vi.mocked(mockUserRepository.findById).mockResolvedValue(mockUserEntity);
       vi.mocked(mockPasswordHasher.compare).mockResolvedValue(true);
@@ -199,7 +170,6 @@ describe('AuthService', () => {
       vi.mocked(mockTokenService.verifyRefreshToken).mockResolvedValue({
         sub: 1,
         email: 'user@example.com',
-        role: UserRole.USER,
       });
       vi.mocked(mockUserRepository.findById).mockResolvedValue(mockUserEntity);
       vi.mocked(mockPasswordHasher.compare).mockResolvedValue(false);

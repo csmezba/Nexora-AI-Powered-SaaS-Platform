@@ -11,7 +11,6 @@ import { BcryptPasswordHasher } from '../infrastructure/services/bcrypt-password
 import { TOKEN_SERVICE } from '../domain/services/token-service.interface.js';
 import { JwtTokenService } from '../infrastructure/services/jwt-token.service.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
-import { RolesGuard } from './guards/roles.guard.js';
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { RolesGuard } from './guards/roles.guard.js';
     AuthService,
     AuthResolver,
     JwtAuthGuard,
-    RolesGuard,
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,
@@ -43,11 +41,9 @@ import { RolesGuard } from './guards/roles.guard.js';
     AuthService,
     AuthResolver,
     JwtAuthGuard,
-    RolesGuard,
     USER_REPOSITORY,
     PASSWORD_HASHER,
     TOKEN_SERVICE,
   ],
 })
 export class AuthModule {}
-

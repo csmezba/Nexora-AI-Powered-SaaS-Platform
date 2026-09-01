@@ -1,11 +1,8 @@
-import { UserRole } from '../enums/user-role.enum.js';
-
 export const TOKEN_SERVICE = Symbol('ITokenService');
 
 export interface TokenPayload {
   sub: number;
   email: string;
-  role: UserRole;
   [key: string]: unknown;
 }
 

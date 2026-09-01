@@ -51,10 +51,6 @@ export class JwtAuthGuard implements CanActivate {
         throw new UnauthorizedException('User no longer exists');
       }
 
-      if (!user.isActive()) {
-        throw new UnauthorizedException('User account is inactive or suspended');
-      }
-
       // Attach sanitized user to request
       (request as unknown as { user: unknown }).user = user.sanitize();
       return true;
@@ -74,7 +70,6 @@ export class JwtAuthGuard implements CanActivate {
     return context.switchToHttp().getRequest<Request>();
   }
 
-
   private extractTokenFromHeader(request: Request): string | undefined {
     const authHeader = request?.headers?.authorization;
     if (!authHeader) {
@@ -84,4 +79,3 @@ export class JwtAuthGuard implements CanActivate {
     return type === 'Bearer' && token ? token : undefined;
   }
 }
-

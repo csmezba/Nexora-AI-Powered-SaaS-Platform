@@ -1,20 +1,4 @@
 // use prisma-next
-enum user_role {
-  admin = "admin"
-  manager = "manager"
-  user = "user"
-
-  @@type("pg/text@1")
-}
-
-enum user_status {
-  active = "active"
-  inactive = "inactive"
-  suspended = "suspended"
-
-  @@type("pg/text@1")
-}
-
 enum OrganizationRole {
   ADMIN = "ADMIN"
   MEMBER = "MEMBER"
@@ -189,8 +173,6 @@ model User {
   password         String
   firstName        String?
   lastName         String?
-  role             user_role   @default(user)
-  status           user_status @default(active)
   refreshTokenHash String?
 
   createdAt TimestamptzString @default(now())

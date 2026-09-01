@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from '../prisma/prisma.module.js';
-import { AuthController } from './auth.controller.js';
 import { AuthResolver } from './auth.resolver.js';
 import { AuthService } from './auth.service.js';
 import { USER_REPOSITORY } from '../domain/repositories/user-repository.interface.js';
@@ -19,7 +18,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
       global: false,
     }),
   ],
-  controllers: [AuthController],
+  controllers: [],
   providers: [
     AuthService,
     AuthResolver,

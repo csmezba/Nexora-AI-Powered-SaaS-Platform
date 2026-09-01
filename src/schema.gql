@@ -40,15 +40,6 @@ type LogoutResponse {
   success: Boolean!
 }
 
-"""Generic message response with user context"""
-type MessageResponse {
-  """Response status message"""
-  message: String!
-
-  """Associated user profile"""
-  user: User
-}
-
 type Mutation {
   """Authenticate user with email and password"""
   login(input: LoginInput!): AuthResponse!

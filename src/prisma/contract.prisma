@@ -19,6 +19,166 @@ enum OrganizationRole {
   ADMIN = "ADMIN"
   MEMBER = "MEMBER"
   OWNER = "OWNER"
+  MANAGER = "MANAGER"
+  DESIGNER = "DESIGNER"
+  DEVELOPER = "DEVELOPER"
+  QA = "QA"
+  MARKETING = "MARKETING"
+  SALES = "SALES"
+  ACCOUNTANT = "ACCOUNTANT"
+  VIEWER = "VIEWER"
+
+  @@type("pg/text@1")
+}
+
+enum OAuthProvider {
+  GOOGLE = "GOOGLE"
+  GITHUB = "GITHUB"
+  GITLAB = "GITLAB"
+  MICROSOFT = "MICROSOFT"
+
+  @@type("pg/text@1")
+}
+
+enum ProjectStatus {
+  PLANNING = "PLANNING"
+  ACTIVE = "ACTIVE"
+  ON_HOLD = "ON_HOLD"
+  COMPLETED = "COMPLETED"
+  CANCELLED = "CANCELLED"
+
+  @@type("pg/text@1")
+}
+
+enum TaskStatus {
+  BACKLOG = "BACKLOG"
+  TODO = "TODO"
+  IN_PROGRESS = "IN_PROGRESS"
+  IN_REVIEW = "IN_REVIEW"
+  DONE = "DONE"
+  CANCELLED = "CANCELLED"
+
+  @@type("pg/text@1")
+}
+
+enum TaskPriority {
+  LOW = "LOW"
+  MEDIUM = "MEDIUM"
+  HIGH = "HIGH"
+  URGENT = "URGENT"
+
+  @@type("pg/text@1")
+}
+
+enum DependencyType {
+  BLOCKS = "BLOCKS"
+  RELATES_TO = "RELATES_TO"
+
+  @@type("pg/text@1")
+}
+
+enum SprintStatus {
+  PLANNED = "PLANNED"
+  ACTIVE = "ACTIVE"
+  COMPLETED = "COMPLETED"
+
+  @@type("pg/text@1")
+}
+
+enum MessageType {
+  TEXT = "TEXT"
+  IMAGE = "IMAGE"
+  FILE = "FILE"
+  SYSTEM = "SYSTEM"
+  AI = "AI"
+
+  @@type("pg/text@1")
+}
+
+enum TicketStatus {
+  OPEN = "OPEN"
+  IN_PROGRESS = "IN_PROGRESS"
+  RESOLVED = "RESOLVED"
+  CLOSED = "CLOSED"
+
+  @@type("pg/text@1")
+}
+
+enum TicketPriority {
+  LOW = "LOW"
+  MEDIUM = "MEDIUM"
+  HIGH = "HIGH"
+  URGENT = "URGENT"
+
+  @@type("pg/text@1")
+}
+
+enum DocumentStatus {
+  PROCESSING = "PROCESSING"
+  COMPLETED = "COMPLETED"
+  FAILED = "FAILED"
+
+  @@type("pg/text@1")
+}
+
+enum AIMessageRole {
+  USER = "USER"
+  ASSISTANT = "ASSISTANT"
+  SYSTEM = "SYSTEM"
+
+  @@type("pg/text@1")
+}
+
+enum SubscriptionStatus {
+  TRIALING = "TRIALING"
+  ACTIVE = "ACTIVE"
+  PAST_DUE = "PAST_DUE"
+  CANCELED = "CANCELED"
+  UNPAID = "UNPAID"
+  INCOMPLETE = "INCOMPLETE"
+
+  @@type("pg/text@1")
+}
+
+enum InvoiceStatus {
+  DRAFT = "DRAFT"
+  OPEN = "OPEN"
+  PAID = "PAID"
+  VOID = "VOID"
+  UNCOLLECTIBLE = "UNCOLLECTIBLE"
+
+  @@type("pg/text@1")
+}
+
+enum PaymentStatus {
+  PENDING = "PENDING"
+  SUCCEEDED = "SUCCEEDED"
+  FAILED = "FAILED"
+  REFUNDED = "REFUNDED"
+
+  @@type("pg/text@1")
+}
+
+enum NotificationType {
+  SYSTEM = "SYSTEM"
+  MENTION = "MENTION"
+  ASSIGNMENT = "ASSIGNMENT"
+  TASK_UPDATE = "TASK_UPDATE"
+  TICKET_UPDATE = "TICKET_UPDATE"
+  BILLING = "BILLING"
+  REMINDER = "REMINDER"
+
+  @@type("pg/text@1")
+}
+
+enum IntegrationProvider {
+  SLACK = "SLACK"
+  GITHUB = "GITHUB"
+  GITLAB = "GITLAB"
+  JIRA = "JIRA"
+  ZAPIER = "ZAPIER"
+  DISCORD = "DISCORD"
+  WEBHOOK = "WEBHOOK"
 
   @@type("pg/text@1")
 }
@@ -33,10 +193,26 @@ model User {
   status           user_status @default(active)
   refreshTokenHash String?
 
-  createdAt        TimestamptzString @default(now())
+  createdAt TimestamptzString @default(now())
   updatedAt        temporal.updatedAtString()
 
-  organizationMembers OrganizationMember[]
+  organizationMembers      OrganizationMember[]
+  sessions                 UserSession[]
+  oauthAccounts            OAuthAccount[]
+  teamMembers              TeamMember[]
+  projectMembers           ProjectMember[]
+  createdProjects          Project[]                 @relation("ProjectCreatedBy")
+  createdTasks             Task[]                    @relation("TaskCreator")
+  taskAssignees            TaskAssignee[]
+  taskComments             TaskComment[]
+  conversationParticipants ConversationParticipant[]
+  sentMessages             Message[]                 @relation("MessageSender")
+  assignedTickets          Ticket[]                  @relation("TicketAssignee")
+  ticketComments           TicketComment[]
+  aiConversations          AIConversation[]
+  aiUsages                 AIUsage[]
+  notifications            Notification[]
+  auditLogs                AuditLog[]
 }
 
 model Organization {
@@ -46,10 +222,25 @@ model Organization {
   logoUrl     String?
   description String?
 
-  createdAt   TimestamptzString @default(now())
+  createdAt TimestamptzString @default(now())
   updatedAt   temporal.updatedAtString()
 
-  members     OrganizationMember[]
+  members         OrganizationMember[]
+  roles           Role[]
+  teams           Team[]
+  projects        Project[]
+  labels          Label[]
+  customers       Customer[]
+  knowledgeBases  KnowledgeBase[]
+  aiConversations AIConversation[]
+  aiUsages        AIUsage[]
+  subscription    Subscription?
+  invoices        Invoice[]
+  payments        Payment[]
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+  integrations    Integration[]
+  apiKeys         ApiKey[]
 }
 
 model OrganizationMember {
@@ -63,10 +254,1039 @@ model OrganizationMember {
   joinedAt TimestamptzString @default(now())
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  memberRoles OrganizationMemberRole[]
 
   @@unique([organizationId, userId])
   @@index([userId])
+  @@index([organizationId])
 }
+
+model Role {
+  id             Int     @id @default(autoincrement())
+  name           String
+  description    String?
+
+  organizationId Int
+
+  organization Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  permissions RolePermission[]
+  memberRoles OrganizationMemberRole[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model Permission {
+  id          Int     @id @default(autoincrement())
+  resource    String
+  action      String
+  description String?
+
+  rolePermissions RolePermission[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([resource, action])
+}
+
+model RolePermission {
+  roleId       Int
+  permissionId Int
+
+  role Role @relation(
+    fields: [roleId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  permission Permission @relation(
+    fields: [permissionId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  assignedAt TimestamptzString @default(now())
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model OrganizationMemberRole {
+  organizationMemberId Int
+  roleId               Int
+
+  organizationMember OrganizationMember @relation(
+    fields: [organizationMemberId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  role Role @relation(
+    fields: [roleId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  assignedAt TimestamptzString @default(now())
+
+  @@id([organizationMemberId, roleId])
+  @@index([roleId])
+}
+
+model UserSession {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+
+  refreshToken String
+  userAgent    String?
+  ipAddress    String?
+  expiresAt    TimestamptzString
+
+  createdAt    TimestamptzString @default(now())
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@index([userId])
+}
+
+model OAuthAccount {
+  id                Int           @id @default(autoincrement())
+  userId            Int
+
+  provider          OAuthProvider
+  providerAccountId String
+
+  accessToken       String?
+  refreshToken      String?
+  expiresAt         TimestamptzString?
+
+  createdAt         TimestamptzString @default(now())
+  updatedAt         temporal.updatedAtString()
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Team {
+  id             Int     @id @default(autoincrement())
+  organizationId Int
+
+  name           String
+  description    String?
+
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  organization Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  members  TeamMember[]
+  projects Project[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model TeamMember {
+  teamId Int
+  userId Int
+
+  team Team @relation(
+    fields: [teamId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  joinedAt TimestamptzString @default(now())
+
+  @@id([teamId, userId])
+  @@index([userId])
+}
+
+model Project {
+  id             Int           @id @default(autoincrement())
+
+  organizationId Int
+  teamId         Int?
+  createdById    Int
+
+  name           String
+  key            String
+  description    String?
+
+  status         ProjectStatus @default(ACTIVE)
+
+  startDate      TimestamptzString?
+  dueDate        TimestamptzString?
+
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  organization Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  team Team? @relation(
+    fields: [teamId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  createdBy User @relation("ProjectCreatedBy",
+    fields: [createdById],
+    references: [id],
+    onDelete: Restrict
+  )
+
+  members ProjectMember[]
+  tasks   Task[]
+  sprints Sprint[]
+
+  @@unique([organizationId, key])
+  @@index([organizationId])
+  @@index([teamId])
+  @@index([createdById])
+}
+
+model ProjectMember {
+  projectId Int
+  userId    Int
+
+  project Project @relation(
+    fields: [projectId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  joinedAt TimestamptzString @default(now())
+
+  @@id([projectId, userId])
+  @@index([userId])
+}
+
+model Task {
+  id           Int          @id @default(autoincrement())
+
+  projectId    Int
+  createdById  Int
+  parentTaskId Int?
+
+  title        String
+  description  String?
+
+  status       TaskStatus   @default(TODO)
+  priority     TaskPriority @default(MEDIUM)
+
+  position     Float        @default(0)
+
+  dueDate      TimestamptzString?
+
+  createdAt    TimestamptzString @default(now())
+  updatedAt    temporal.updatedAtString()
+  deletedAt    TimestamptzString?
+
+  project Project @relation(
+    fields: [projectId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  creator User @relation("TaskCreator",
+    fields: [createdById],
+    references: [id],
+    onDelete: Restrict
+  )
+
+  parentTask Task? @relation("SubTasks",
+    fields: [parentTaskId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  subTasks Task[] @relation("SubTasks")
+
+  assignees    TaskAssignee[]
+  labels       TaskLabel[]
+  comments     TaskComment[]
+  dependencies TaskDependency[] @relation("TaskDependencies")
+  blockedBy    TaskDependency[] @relation("TaskBlockedBy")
+  sprintTasks  SprintTask[]
+
+  @@index([projectId, status])
+  @@index([createdById])
+  @@index([parentTaskId])
+}
+
+model TaskAssignee {
+  taskId Int
+  userId Int
+
+  task Task @relation(
+    fields: [taskId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  assignedAt TimestamptzString @default(now())
+
+  @@id([taskId, userId])
+  @@index([userId])
+}
+
+model Label {
+  id             Int     @id @default(autoincrement())
+
+  organizationId Int
+
+  name           String
+  color          String
+
+  organization Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  tasks TaskLabel[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model TaskLabel {
+  taskId  Int
+  labelId Int
+
+  task Task @relation(
+    fields: [taskId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  label Label @relation(
+    fields: [labelId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@id([taskId, labelId])
+  @@index([labelId])
+}
+
+model TaskComment {
+  id        Int     @id @default(autoincrement())
+
+  taskId    Int
+  authorId  Int
+
+  content   String
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+  deletedAt TimestamptzString?
+
+  task Task @relation(
+    fields: [taskId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  author User @relation(
+    fields: [authorId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@index([taskId])
+  @@index([authorId])
+}
+
+model TaskDependency {
+  id              Int            @id @default(autoincrement())
+
+  taskId          Int
+  dependsOnTaskId Int
+
+  type            DependencyType @default(BLOCKS)
+
+  createdAt       TimestamptzString @default(now())
+
+  task Task @relation("TaskDependencies",
+    fields: [taskId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  dependsOnTask Task @relation("TaskBlockedBy",
+    fields: [dependsOnTaskId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@unique([taskId, dependsOnTaskId])
+  @@index([dependsOnTaskId])
+}
+
+model Sprint {
+  id        Int          @id @default(autoincrement())
+  projectId Int
+
+  name      String
+  goal      String?
+
+  status    SprintStatus @default(PLANNED)
+
+  startDate TimestamptzString
+  endDate   TimestamptzString
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  project Project @relation(
+    fields: [projectId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  tasks SprintTask[]
+
+  @@index([projectId])
+}
+
+model SprintTask {
+  sprintId Int
+  taskId   Int
+
+  sprint Sprint @relation(
+    fields: [sprintId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  task Task @relation(
+    fields: [taskId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@id([sprintId, taskId])
+  @@index([taskId])
+}
+
+model Customer {
+  id             Int      @id @default(autoincrement())
+  organizationId Int
+
+  name           String
+  email          String?
+  phone          String?
+  company        String?
+
+  metadata       Json?
+
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  organization   Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  conversations  Conversation[]
+  tickets        Ticket[]
+
+  @@index([organizationId])
+  @@index([email])
+}
+
+model Conversation {
+  id           Int      @id @default(autoincrement())
+  customerId   Int
+
+  title        String?
+
+  createdAt    TimestamptzString @default(now())
+  updatedAt    temporal.updatedAtString()
+
+  customer     Customer @relation(
+    fields: [customerId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  participants ConversationParticipant[]
+  messages     Message[]
+  tickets      Ticket[]
+
+  @@index([customerId])
+}
+
+model ConversationParticipant {
+  conversationId Int
+  userId         Int
+
+  conversation   Conversation @relation(
+    fields: [conversationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user           User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  joinedAt       TimestamptzString @default(now())
+
+  @@id([conversationId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id             Int         @id @default(autoincrement())
+
+  conversationId Int
+  senderId       Int?
+
+  content        String
+  type           MessageType @default(TEXT)
+
+  metadata       Json?
+
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  conversation   Conversation @relation(
+    fields: [conversationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  sender         User? @relation("MessageSender",
+    fields: [senderId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+}
+
+model Ticket {
+  id             Int            @id @default(autoincrement())
+
+  customerId     Int
+  conversationId Int?
+
+  title          String
+  description    String?
+
+  status         TicketStatus   @default(OPEN)
+  priority       TicketPriority @default(MEDIUM)
+
+  assignedToId   Int?
+
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+  resolvedAt     TimestamptzString?
+
+  customer       Customer @relation(
+    fields: [customerId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  conversation   Conversation? @relation(
+    fields: [conversationId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  assignedTo     User? @relation("TicketAssignee",
+    fields: [assignedToId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  comments       TicketComment[]
+
+  @@index([customerId])
+  @@index([conversationId])
+  @@index([status, priority])
+  @@index([assignedToId])
+}
+
+model TicketComment {
+  id        Int     @id @default(autoincrement())
+
+  ticketId  Int
+  authorId  Int
+
+  content   String
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+  deletedAt TimestamptzString?
+
+  ticket    Ticket  @relation(
+    fields: [ticketId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  author    User    @relation(
+    fields: [authorId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@index([ticketId])
+  @@index([authorId])
+}
+
+model KnowledgeBase {
+  id             Int     @id @default(autoincrement())
+
+  organizationId Int
+
+  name           String
+  description    String?
+
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  organization   Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  documents      KnowledgeDocument[]
+
+  @@index([organizationId])
+}
+
+model KnowledgeDocument {
+  id              Int            @id @default(autoincrement())
+
+  knowledgeBaseId Int
+
+  title           String
+  fileUrl         String?
+  content         String?
+
+  mimeType        String?
+  status          DocumentStatus @default(PROCESSING)
+
+  createdAt       TimestamptzString @default(now())
+  updatedAt       temporal.updatedAtString()
+
+  knowledgeBase   KnowledgeBase @relation(
+    fields: [knowledgeBaseId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  chunks          DocumentChunk[]
+
+  @@index([knowledgeBaseId])
+}
+
+model DocumentChunk {
+  id         Int     @id @default(autoincrement())
+
+  documentId Int
+
+  content    String
+
+  chunkIndex Int
+
+  embedding  String?
+
+  metadata   Json?
+
+  createdAt  TimestamptzString @default(now())
+
+  document   KnowledgeDocument @relation(
+    fields: [documentId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@index([documentId])
+}
+
+model AIConversation {
+  id             Int     @id @default(autoincrement())
+
+  organizationId Int
+  userId         Int
+
+  title          String?
+
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  organization   Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user           User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  messages       AIMessage[]
+
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model AIMessage {
+  id               Int           @id @default(autoincrement())
+
+  conversationId   Int
+
+  role             AIMessageRole
+  content          String
+
+  model            String?
+  promptTokens     Int?
+  completionTokens Int?
+
+  createdAt        TimestamptzString @default(now())
+
+  conversation     AIConversation @relation(
+    fields: [conversationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@index([conversationId, createdAt])
+}
+
+model AIUsage {
+  id               Int     @id @default(autoincrement())
+
+  organizationId   Int
+  userId           Int?
+
+  provider         String
+  model            String
+
+  promptTokens     Int     @default(0)
+  completionTokens Int     @default(0)
+  totalTokens      Int     @default(0)
+
+  requestCount     Int     @default(1)
+
+  createdAt        TimestamptzString @default(now())
+
+  organization     Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user             User? @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  @@index([organizationId, createdAt])
+  @@index([userId])
+}
+
+model Plan {
+  id            Int      @id @default(autoincrement())
+
+  name          String
+  description   String?
+
+  priceMonthly  Decimal
+  priceYearly   Decimal
+
+  maxUsers      Int
+  maxProjects   Int
+  maxAIRequests Int
+
+  features      Json?
+
+  createdAt     TimestamptzString @default(now())
+  updatedAt     temporal.updatedAtString()
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id                 Int                @id @default(autoincrement())
+
+  organizationId     Int                @unique
+  planId             Int
+
+  status             SubscriptionStatus
+
+  startedAt          TimestamptzString
+  currentPeriodStart TimestamptzString
+  currentPeriodEnd   TimestamptzString
+
+  cancelAtPeriodEnd  Boolean            @default(false)
+
+  organization       Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  plan               Plan @relation(
+    fields: [planId],
+    references: [id],
+    onDelete: Restrict
+  )
+
+  invoices           Invoice[]
+
+  @@index([planId])
+}
+
+model Invoice {
+  id             Int           @id @default(autoincrement())
+
+  organizationId Int
+  subscriptionId Int
+
+  amount         Decimal
+  currency       String        @default("USD")
+
+  status         InvoiceStatus
+
+  dueDate        TimestamptzString
+  paidAt         TimestamptzString?
+
+  createdAt      TimestamptzString @default(now())
+
+  organization   Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  subscription   Subscription @relation(
+    fields: [subscriptionId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  payments       Payment[]
+
+  @@index([organizationId])
+  @@index([subscriptionId])
+}
+
+model Payment {
+  id                Int           @id @default(autoincrement())
+
+  organizationId    Int
+  invoiceId         Int
+
+  provider          String
+  providerPaymentId String?
+
+  amount            Decimal
+  currency          String
+
+  status            PaymentStatus
+
+  createdAt         TimestamptzString @default(now())
+
+  organization      Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  invoice           Invoice @relation(
+    fields: [invoiceId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@index([organizationId])
+  @@index([invoiceId])
+  @@index([providerPaymentId])
+}
+
+model Notification {
+  id             Int              @id @default(autoincrement())
+
+  organizationId Int
+  userId         Int
+
+  type           NotificationType
+
+  title          String
+  message        String
+
+  resourceType   String?
+  resourceId     String?
+
+  isRead         Boolean          @default(false)
+
+  createdAt      TimestamptzString @default(now())
+
+  organization   Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user           User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@index([userId, isRead])
+  @@index([organizationId])
+}
+
+model AuditLog {
+  id             Int     @id @default(autoincrement())
+
+  organizationId Int
+  userId         Int?
+
+  action         String
+  resourceType   String
+  resourceId     String?
+
+  oldValues      Json?
+  newValues      Json?
+
+  ipAddress      String?
+  userAgent      String?
+
+  createdAt      TimestamptzString @default(now())
+
+  organization   Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  user           User? @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  @@index([organizationId, createdAt])
+  @@index([resourceType, resourceId])
+  @@index([userId])
+}
+
+model Integration {
+  id             Int                 @id @default(autoincrement())
+
+  organizationId Int
+
+  provider       IntegrationProvider
+
+  accessToken    String?
+  refreshToken   String?
+
+  metadata       Json?
+
+  isActive       Boolean             @default(true)
+
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  organization   Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@unique([organizationId, provider])
+  @@index([organizationId])
+}
+
+model ApiKey {
+  id             Int       @id @default(autoincrement())
+
+  organizationId Int
+
+  name           String
+  keyHash        String
+  keyPrefix      String
+
+  lastUsedAt     TimestamptzString?
+  expiresAt      TimestamptzString?
+
+  createdAt      TimestamptzString @default(now())
+
+  organization   Organization @relation(
+    fields: [organizationId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@index([organizationId])
+  @@index([keyPrefix])
+}
+
+
+
+
 

@@ -3,6 +3,7 @@ import { UserEntity } from '../entities/user.entity.js';
 export const USER_REPOSITORY = Symbol('IUserRepository');
 
 export interface CreateUserData {
+  pubId?: string;
   email: string;
   passwordHash: string;
   firstName?: string | null;
@@ -18,6 +19,7 @@ export interface UpdateUserData {
 
 export interface IUserRepository {
   findById(id: number): Promise<UserEntity | null>;
+  findByPubId(pubId: string): Promise<UserEntity | null>;
   findByEmail(email: string): Promise<UserEntity | null>;
   create(data: CreateUserData): Promise<UserEntity>;
   update(id: number, data: UpdateUserData): Promise<UserEntity>;

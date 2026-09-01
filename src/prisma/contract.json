@@ -2695,6 +2695,13 @@
                   "kind": "scalar"
                 }
               },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "slug": {
                 "nullable": false,
                 "type": {
@@ -2969,6 +2976,9 @@
                 "name": {
                   "column": "name"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "slug": {
                   "column": "slug"
                 },
@@ -3000,6 +3010,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -3081,6 +3098,9 @@
                 },
                 "organizationId": {
                   "column": "organizationId"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "role": {
                   "column": "role"
@@ -5546,6 +5566,13 @@
                   "kind": "scalar"
                 }
               },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "refreshTokenHash": {
                 "nullable": true,
                 "type": {
@@ -5837,6 +5864,9 @@
                 },
                 "password": {
                   "column": "password"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "refreshTokenHash": {
                   "column": "refreshTokenHash"
@@ -7830,6 +7860,11 @@
                   "nativeType": "text",
                   "nullable": true
                 },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "slug": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -7849,6 +7884,11 @@
                 ]
               },
               "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                },
                 {
                   "columns": [
                     "slug"
@@ -7886,6 +7926,11 @@
                 "organizationId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "role": {
@@ -7969,6 +8014,11 @@
                 ]
               },
               "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                },
                 {
                   "columns": [
                     "organizationId",
@@ -10173,6 +10223,11 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "refreshTokenHash": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -10192,6 +10247,11 @@
                 ]
               },
               "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                },
                 {
                   "columns": [
                     "email"
@@ -10457,7 +10517,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "2b1a33bf4df451d841fa3b1601b2f576beb87f48a5a1ed6337d91faba8487e43"
+    "storageHash": "4f9d7f08b0b68f3b3262a98959ce0c11849cd20afdb08b7ba2883c2869e48d66"
   },
   "execution": {
     "executionHash": "e80d2174cc8a7def5ad8ba6ea30f449e322046af6e082e17a1d7e7a4dd2da1d1",

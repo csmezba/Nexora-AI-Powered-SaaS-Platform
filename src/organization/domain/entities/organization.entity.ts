@@ -1,5 +1,6 @@
 export interface OrganizationEntityProps {
   id: number;
+  pubId: string;
   name?: string | null;
   slug: string;
   logoUrl?: string | null;
@@ -10,6 +11,7 @@ export interface OrganizationEntityProps {
 
 export interface SanitizedOrganization {
   id: number;
+  pubId: string;
   name: string | null;
   slug: string;
   logoUrl: string | null;
@@ -20,6 +22,7 @@ export interface SanitizedOrganization {
 
 export class OrganizationEntity {
   private readonly _id: number;
+  private readonly _pubId: string;
   private _name: string | null;
   private _slug: string;
   private _logoUrl: string | null;
@@ -29,6 +32,7 @@ export class OrganizationEntity {
 
   constructor(props: OrganizationEntityProps) {
     this._id = props.id;
+    this._pubId = props.pubId;
     this._name = props.name ?? null;
     this._slug = props.slug.toLowerCase().trim();
     this._logoUrl = props.logoUrl ?? null;
@@ -39,6 +43,10 @@ export class OrganizationEntity {
 
   public get id(): number {
     return this._id;
+  }
+
+  public get pubId(): string {
+    return this._pubId;
   }
 
   public get name(): string | null {
@@ -92,6 +100,7 @@ export class OrganizationEntity {
   public sanitize(): SanitizedOrganization {
     return {
       id: this._id,
+      pubId: this._pubId,
       name: this._name,
       slug: this._slug,
       logoUrl: this._logoUrl,

@@ -34,14 +34,25 @@ export class OrganizationResolver {
   }
 
   @Query(() => OrganizationResponseDto, {
-    name: 'organizationById',
-    description: 'Fetch organization details by unique ID',
+    name: 'organization',
+    description: 'Fetch organization details by unique identifier (pubId, slug, or ID)',
   })
-  async organizationById(
-    @Args('id', { type: () => Int }) id: number,
+  async organization(
+    @Args('id', { type: () => String, description: 'Organization pubId, slug, or ID' }) id: string,
     @CurrentUser('id') userId: number,
   ): Promise<OrganizationResponseDto> {
-    return this.organizationService.getOrganizationById(id, userId);
+    return this.organizationService.getOrganization(id, userId);
+  }
+
+  @Query(() => OrganizationResponseDto, {
+    name: 'organizationByPubId',
+    description: 'Fetch organization details by unique pubId (e.g. org_xxxxxxxx)',
+  })
+  async organizationByPubId(
+    @Args('pubId', { type: () => String }) pubId: string,
+    @CurrentUser('id') userId: number,
+  ): Promise<OrganizationResponseDto> {
+    return this.organizationService.getOrganizationByPubId(pubId, userId);
   }
 
   @Query(() => OrganizationResponseDto, {
@@ -55,13 +66,24 @@ export class OrganizationResolver {
     return this.organizationService.getOrganizationBySlug(slug, userId);
   }
 
+  @Query(() => OrganizationResponseDto, {
+    name: 'organizationById',
+    description: 'Fetch organization details by numeric ID',
+  })
+  async organizationById(
+    @Args('id', { type: () => Int }) id: number,
+    @CurrentUser('id') userId: number,
+  ): Promise<OrganizationResponseDto> {
+    return this.organizationService.getOrganizationById(id, userId);
+  }
+
   @Query(() => [OrganizationMemberResponseDto], {
     name: 'organizationMembers',
     description:
       'Fetch all members belonging to an organization with their user profiles',
   })
   async organizationMembers(
-    @Args('organizationId', { type: () => Int }) organizationId: number,
+    @Args('organizationId', { type: () => String, description: 'Organization pubId, slug, or ID' }) organizationId: string,
     @CurrentUser('id') userId: number,
   ): Promise<OrganizationMemberResponseDto[]> {
     return this.organizationService.listMembers(organizationId, userId);
@@ -82,7 +104,7 @@ export class OrganizationResolver {
   })
   async updateOrganization(
     @CurrentUser('id') userId: number,
-    @Args('id', { type: () => Int }) id: number,
+    @Args('id', { type: () => String, description: 'Organization pubId, slug, or ID' }) id: string,
     @Args('input') input: UpdateOrganizationInput,
   ): Promise<OrganizationResponseDto> {
     return this.organizationService.updateOrganization(id, userId, input);
@@ -93,7 +115,7 @@ export class OrganizationResolver {
   })
   async deleteOrganization(
     @CurrentUser('id') userId: number,
-    @Args('id', { type: () => Int }) id: number,
+    @Args('id', { type: () => String, description: 'Organization pubId, slug, or ID' }) id: string,
   ): Promise<DeleteOrganizationResponseDto> {
     return this.organizationService.deleteOrganization(id, userId);
   }
@@ -136,7 +158,7 @@ export class OrganizationResolver {
   })
   async leaveOrganization(
     @CurrentUser('id') userId: number,
-    @Args('organizationId', { type: () => Int }) organizationId: number,
+    @Args('organizationId', { type: () => String, description: 'Organization pubId, slug, or ID' }) organizationId: string,
   ): Promise<MemberActionResponseDto> {
     return this.organizationService.leaveOrganization(userId, organizationId);
   }

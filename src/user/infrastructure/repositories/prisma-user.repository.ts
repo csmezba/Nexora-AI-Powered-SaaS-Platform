@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service.js';
 import { UserEntity } from '../../domain/entities/user.entity.js';
+import { generatePubId } from '../../../common/utils/unique-id.util.js';
 import type {
   CreateUserData,
   IUserRepository,
@@ -9,6 +10,7 @@ import type {
 
 interface PrismaUserRecord {
   id: number;
+  pubId: string;
   email: string;
   password: string;
   firstName?: string | null;
@@ -19,7 +21,7 @@ interface PrismaUserRecord {
 }
 
 interface PrismaUserOrmModel {
-  first(filter: { id: number }): Promise<PrismaUserRecord | null>;
+  first(filter: { id?: number; pubId?: string }): Promise<PrismaUserRecord | null>;
   where(predicate: unknown): {
     first(): Promise<PrismaUserRecord | null>;
     update(data: Record<string, unknown>): Promise<unknown>;
@@ -49,6 +51,7 @@ export class PrismaUserRepository implements IUserRepository {
   private toEntity(record: PrismaUserRecord): UserEntity {
     return UserEntity.reconstitute({
       id: record.id,
+      pubId: record.pubId,
       email: record.email,
       passwordHash: record.password,
       firstName: record.firstName ?? null,
@@ -61,6 +64,15 @@ export class PrismaUserRepository implements IUserRepository {
 
   async findById(id: number): Promise<UserEntity | null> {
     const record = await this.userModel.first({ id });
+    return record ? this.toEntity(record) : null;
+  }
+
+  async findByPubId(pubId: string): Promise<UserEntity | null> {
+    const record = await this.userModel
+      .where((u: { pubId: { eq: (val: string) => unknown } }) =>
+        u.pubId.eq(pubId),
+      )
+      .first();
     return record ? this.toEntity(record) : null;
   }
 
@@ -77,6 +89,7 @@ export class PrismaUserRepository implements IUserRepository {
   async create(data: CreateUserData): Promise<UserEntity> {
     const now = new Date().toISOString();
     const record = await this.userModel.create({
+      pubId: data.pubId ?? generatePubId('usr'),
       email: data.email.toLowerCase().trim(),
       password: data.passwordHash,
       firstName: data.firstName ?? null,

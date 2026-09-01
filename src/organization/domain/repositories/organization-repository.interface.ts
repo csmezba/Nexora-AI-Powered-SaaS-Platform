@@ -3,6 +3,7 @@ import { OrganizationEntity } from '../entities/organization.entity.js';
 export const ORGANIZATION_REPOSITORY = Symbol('IOrganizationRepository');
 
 export interface CreateOrganizationData {
+  pubId?: string;
   name?: string | null;
   slug: string;
   logoUrl?: string | null;
@@ -18,7 +19,9 @@ export interface UpdateOrganizationData {
 
 export interface IOrganizationRepository {
   findById(id: number): Promise<OrganizationEntity | null>;
+  findByPubId(pubId: string): Promise<OrganizationEntity | null>;
   findBySlug(slug: string): Promise<OrganizationEntity | null>;
+  findByIdOrPubIdOrSlug(identifier: string | number): Promise<OrganizationEntity | null>;
   findAllByUserId(userId: number): Promise<OrganizationEntity[]>;
   create(data: CreateOrganizationData): Promise<OrganizationEntity>;
   update(id: number, data: UpdateOrganizationData): Promise<OrganizationEntity>;

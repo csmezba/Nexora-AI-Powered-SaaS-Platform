@@ -169,6 +169,7 @@ enum IntegrationProvider {
 
 model User {
   id               Int         @id @default(autoincrement())
+  pubId            String      @unique
   email            String      @unique
   password         String
   firstName        String?
@@ -199,6 +200,7 @@ model User {
 
 model Organization {
   id          Int     @id @default(autoincrement())
+  pubId       String  @unique
   name        String?
   slug        String  @unique
   logoUrl     String?
@@ -226,7 +228,8 @@ model Organization {
 }
 
 model OrganizationMember {
-  id Int @id @default(autoincrement())
+  id             Int    @id @default(autoincrement())
+  pubId          String @unique
 
   organizationId Int
   userId         Int

@@ -3,6 +3,7 @@ import { PrismaService } from '../../../prisma/prisma.service.js';
 import { OrganizationMemberEntity } from '../../domain/entities/organization-member.entity.js';
 import { UserEntity } from '../../../user/domain/entities/user.entity.js';
 import { OrganizationRole } from '../../domain/enums/organization-role.enum.js';
+import { generatePubId } from '../../../common/utils/unique-id.util.js';
 import type {
   CreateOrganizationMemberData,
   IOrganizationMemberRepository,
@@ -11,6 +12,7 @@ import type {
 
 interface PrismaOrgMemberRecord {
   id: number;
+  pubId: string;
   organizationId: number;
   userId: number;
   role: string;
@@ -19,6 +21,7 @@ interface PrismaOrgMemberRecord {
 
 interface PrismaUserRecord {
   id: number;
+  pubId: string;
   email: string;
   password: string;
   firstName?: string | null;
@@ -81,6 +84,7 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
   private toEntity(record: PrismaOrgMemberRecord): OrganizationMemberEntity {
     return OrganizationMemberEntity.reconstitute({
       id: record.id,
+      pubId: record.pubId,
       organizationId: record.organizationId,
       userId: record.userId,
       role: record.role as OrganizationRole,
@@ -91,6 +95,7 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
   private toUserEntity(record: PrismaUserRecord): UserEntity {
     return UserEntity.reconstitute({
       id: record.id,
+      pubId: record.pubId,
       email: record.email,
       passwordHash: record.password,
       firstName: record.firstName ?? null,
@@ -103,6 +108,15 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
 
   async findById(id: number): Promise<OrganizationMemberEntity | null> {
     const record = await this.memberModel.first({ id });
+    return record ? this.toEntity(record) : null;
+  }
+
+  async findByPubId(pubId: string): Promise<OrganizationMemberEntity | null> {
+    const record = await this.memberModel
+      .where((m: { pubId: { eq: (val: string) => unknown } }) =>
+        m.pubId.eq(pubId),
+      )
+      .first();
     return record ? this.toEntity(record) : null;
   }
 
@@ -165,6 +179,7 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
   ): Promise<OrganizationMemberEntity> {
     const now = new Date().toISOString();
     const record = await this.memberModel.create({
+      pubId: data.pubId ?? generatePubId('mem'),
       organizationId: data.organizationId,
       userId: data.userId,
       role: data.role ?? OrganizationRole.MEMBER,

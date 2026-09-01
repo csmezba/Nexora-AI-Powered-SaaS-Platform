@@ -19,6 +19,8 @@ import {
   type IUserRepository,
 } from '../user/domain/repositories/user-repository.interface.js';
 import { OrganizationRole } from './domain/enums/organization-role.enum.js';
+import { OrganizationEntity } from './domain/entities/organization.entity.js';
+import { UserEntity } from '../user/domain/entities/user.entity.js';
 import {
   CreateOrganizationInput,
   DeleteOrganizationResponseDto,
@@ -43,6 +45,42 @@ export class OrganizationService {
     @Inject(USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
   ) {}
+
+  public async resolveOrganization(identifier: string | number): Promise<OrganizationEntity> {
+    const org = await this.orgRepository.findByIdOrPubIdOrSlug(identifier);
+    if (!org) {
+      throw new NotFoundException(`Organization '${identifier}' not found`);
+    }
+    return org;
+  }
+
+  public async resolveUser(identifier: string | number): Promise<UserEntity> {
+    if (typeof identifier === 'number') {
+      const user = await this.userRepository.findById(identifier);
+      if (user) return user;
+    }
+    const str = String(identifier).trim();
+    if (str.includes('@')) {
+      const user = await this.userRepository.findByEmail(str);
+      if (user) return user;
+    }
+    if (str.startsWith('usr_')) {
+      const user = await this.userRepository.findByPubId(str);
+      if (user) return user;
+    }
+    const num = Number(str);
+    if (!isNaN(num) && Number.isInteger(num)) {
+      const user = await this.userRepository.findById(num);
+      if (user) return user;
+    }
+    const userByPubId = await this.userRepository.findByPubId(str);
+    if (userByPubId) return userByPubId;
+
+    const userByEmail = await this.userRepository.findByEmail(str);
+    if (userByEmail) return userByEmail;
+
+    throw new NotFoundException(`User '${identifier}' not found`);
+  }
 
   async createOrganization(
     userId: number,
@@ -103,6 +141,33 @@ export class OrganizationService {
     };
   }
 
+  async getOrganizationByPubId(
+    pubId: string,
+    userId?: number,
+  ): Promise<OrganizationResponseDto> {
+    const org = await this.orgRepository.findByPubId(pubId.trim());
+    if (!org) {
+      throw new NotFoundException(`Organization with pubId '${pubId}' not found`);
+    }
+
+    const memberCount = await this.memberRepository.countByOrg(org.id);
+    let currentUserRole: OrganizationRole | undefined;
+
+    if (userId) {
+      const membership = await this.memberRepository.findByOrgAndUser(
+        org.id,
+        userId,
+      );
+      currentUserRole = membership?.role;
+    }
+
+    return {
+      ...org.sanitize(),
+      memberCount,
+      currentUserRole,
+    };
+  }
+
   async getOrganizationBySlug(
     slug: string,
     userId?: number,
@@ -112,6 +177,29 @@ export class OrganizationService {
       throw new NotFoundException(`Organization with slug '${slug}' not found`);
     }
 
+    const memberCount = await this.memberRepository.countByOrg(org.id);
+    let currentUserRole: OrganizationRole | undefined;
+
+    if (userId) {
+      const membership = await this.memberRepository.findByOrgAndUser(
+        org.id,
+        userId,
+      );
+      currentUserRole = membership?.role;
+    }
+
+    return {
+      ...org.sanitize(),
+      memberCount,
+      currentUserRole,
+    };
+  }
+
+  async getOrganization(
+    identifier: string,
+    userId?: number,
+  ): Promise<OrganizationResponseDto> {
+    const org = await this.resolveOrganization(identifier);
     const memberCount = await this.memberRepository.countByOrg(org.id);
     let currentUserRole: OrganizationRole | undefined;
 
@@ -153,17 +241,14 @@ export class OrganizationService {
   }
 
   async updateOrganization(
-    orgId: number,
+    orgIdentifier: string | number,
     userId: number,
     input: UpdateOrganizationInput,
   ): Promise<OrganizationResponseDto> {
-    const org = await this.orgRepository.findById(orgId);
-    if (!org) {
-      throw new NotFoundException(`Organization with ID ${orgId} not found`);
-    }
+    const org = await this.resolveOrganization(orgIdentifier);
 
     const membership = await this.memberRepository.findByOrgAndUser(
-      orgId,
+      org.id,
       userId,
     );
     if (
@@ -188,14 +273,14 @@ export class OrganizationService {
       }
     }
 
-    const updated = await this.orgRepository.update(orgId, {
+    const updated = await this.orgRepository.update(org.id, {
       name: input.name,
       slug: input.slug,
       logoUrl: input.logoUrl,
       description: input.description,
     });
 
-    const memberCount = await this.memberRepository.countByOrg(orgId);
+    const memberCount = await this.memberRepository.countByOrg(org.id);
 
     return {
       ...updated.sanitize(),
@@ -205,16 +290,13 @@ export class OrganizationService {
   }
 
   async deleteOrganization(
-    orgId: number,
+    orgIdentifier: string | number,
     userId: number,
   ): Promise<DeleteOrganizationResponseDto> {
-    const org = await this.orgRepository.findById(orgId);
-    if (!org) {
-      throw new NotFoundException(`Organization with ID ${orgId} not found`);
-    }
+    const org = await this.resolveOrganization(orgIdentifier);
 
     const membership = await this.memberRepository.findByOrgAndUser(
-      orgId,
+      org.id,
       userId,
     );
     if (!membership || membership.role !== OrganizationRole.OWNER) {
@@ -223,7 +305,7 @@ export class OrganizationService {
       );
     }
 
-    await this.orgRepository.delete(orgId);
+    await this.orgRepository.delete(org.id);
 
     return {
       success: true,
@@ -232,11 +314,12 @@ export class OrganizationService {
   }
 
   async listMembers(
-    orgId: number,
+    orgIdentifier: string | number,
     userId: number,
   ): Promise<OrganizationMemberResponseDto[]> {
+    const org = await this.resolveOrganization(orgIdentifier);
     const membership = await this.memberRepository.findByOrgAndUser(
-      orgId,
+      org.id,
       userId,
     );
     if (!membership) {
@@ -246,7 +329,7 @@ export class OrganizationService {
     }
 
     const membersWithUsers =
-      await this.memberRepository.findMembersWithUsers(orgId);
+      await this.memberRepository.findMembersWithUsers(org.id);
 
     return membersWithUsers.map(({ member, user }) => ({
       ...member.sanitize(),
@@ -258,8 +341,10 @@ export class OrganizationService {
     currentUserId: number,
     input: AddOrganizationMemberInput,
   ): Promise<MemberActionResponseDto> {
+    const org = await this.resolveOrganization(input.organizationId);
+
     const callerMembership = await this.memberRepository.findByOrgAndUser(
-      input.organizationId,
+      org.id,
       currentUserId,
     );
     if (
@@ -272,9 +357,9 @@ export class OrganizationService {
       );
     }
 
-    let targetUser = null;
+    let targetUser: UserEntity | null = null;
     if (input.userId) {
-      targetUser = await this.userRepository.findById(input.userId);
+      targetUser = await this.resolveUser(input.userId);
     } else if (input.email) {
       targetUser = await this.userRepository.findByEmail(input.email);
     } else {
@@ -288,7 +373,7 @@ export class OrganizationService {
     }
 
     const existingMember = await this.memberRepository.findByOrgAndUser(
-      input.organizationId,
+      org.id,
       targetUser.id,
     );
     if (existingMember) {
@@ -306,7 +391,7 @@ export class OrganizationService {
     }
 
     const newMember = await this.memberRepository.create({
-      organizationId: input.organizationId,
+      organizationId: org.id,
       userId: targetUser.id,
       role,
     });
@@ -325,8 +410,10 @@ export class OrganizationService {
     currentUserId: number,
     input: UpdateMemberRoleInput,
   ): Promise<MemberActionResponseDto> {
+    const org = await this.resolveOrganization(input.organizationId);
+
     const callerMembership = await this.memberRepository.findByOrgAndUser(
-      input.organizationId,
+      org.id,
       currentUserId,
     );
     if (
@@ -339,9 +426,10 @@ export class OrganizationService {
       );
     }
 
+    const targetUser = await this.resolveUser(input.userId);
     const targetMember = await this.memberRepository.findByOrgAndUser(
-      input.organizationId,
-      input.userId,
+      org.id,
+      targetUser.id,
     );
     if (!targetMember) {
       throw new NotFoundException(
@@ -365,7 +453,7 @@ export class OrganizationService {
       input.role !== OrganizationRole.OWNER
     ) {
       const ownerCount = await this.memberRepository.countOwnersByOrg(
-        input.organizationId,
+        org.id,
       );
       if (ownerCount <= 1) {
         throw new BadRequestException(
@@ -378,14 +466,13 @@ export class OrganizationService {
       targetMember.id,
       input.role,
     );
-    const targetUser = await this.userRepository.findById(input.userId);
 
     return {
       success: true,
       message: `Member role updated to ${input.role} successfully`,
       member: {
         ...updated.sanitize(),
-        user: targetUser ? targetUser.sanitize() : undefined,
+        user: targetUser.sanitize(),
       },
     };
   }
@@ -394,17 +481,20 @@ export class OrganizationService {
     currentUserId: number,
     input: RemoveMemberInput,
   ): Promise<MemberActionResponseDto> {
+    const org = await this.resolveOrganization(input.organizationId);
+
     const callerMembership = await this.memberRepository.findByOrgAndUser(
-      input.organizationId,
+      org.id,
       currentUserId,
     );
     if (!callerMembership) {
       throw new ForbiddenException('You are not a member of this organization');
     }
 
+    const targetUser = await this.resolveUser(input.userId);
     const targetMember = await this.memberRepository.findByOrgAndUser(
-      input.organizationId,
-      input.userId,
+      org.id,
+      targetUser.id,
     );
     if (!targetMember) {
       throw new NotFoundException(
@@ -412,7 +502,7 @@ export class OrganizationService {
       );
     }
 
-    const isSelf = currentUserId === input.userId;
+    const isSelf = currentUserId === targetUser.id;
 
     if (!isSelf) {
       if (
@@ -435,7 +525,7 @@ export class OrganizationService {
 
     if (targetMember.role === OrganizationRole.OWNER) {
       const ownerCount = await this.memberRepository.countOwnersByOrg(
-        input.organizationId,
+        org.id,
       );
       if (ownerCount <= 1) {
         throw new BadRequestException(
@@ -456,8 +546,12 @@ export class OrganizationService {
 
   async leaveOrganization(
     userId: number,
-    organizationId: number,
+    organizationId: string | number,
   ): Promise<MemberActionResponseDto> {
-    return this.removeMember(userId, { organizationId, userId });
+    const user = await this.userRepository.findById(userId);
+    return this.removeMember(userId, {
+      organizationId: String(organizationId),
+      userId: user?.pubId ?? String(userId),
+    });
   }
 }

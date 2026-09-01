@@ -3,8 +3,8 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
+  IsString,
 } from 'class-validator';
 import { OrganizationRole } from '../domain/enums/organization-role.enum.js';
 import { UserResponseDto } from '../../auth/dto/auth.dto.js';
@@ -14,15 +14,15 @@ import type { SanitizedOrganizationMember } from '../domain/entities/organizatio
   description: 'Input payload for adding a member to an organization',
 })
 export class AddOrganizationMemberInput {
-  @Field(() => Int, { description: 'Organization ID' })
-  @IsNumber()
-  @IsNotEmpty({ message: 'Organization ID is required' })
-  organizationId!: number;
+  @Field(() => String, { description: 'Organization identifier (pubId, slug, or ID)' })
+  @IsString()
+  @IsNotEmpty({ message: 'Organization identifier is required' })
+  organizationId!: string;
 
-  @Field(() => Int, { nullable: true, description: 'User ID to add' })
-  @IsNumber()
+  @Field(() => String, { nullable: true, description: 'User identifier (pubId or ID) to add' })
+  @IsString()
   @IsOptional()
-  userId?: number;
+  userId?: string;
 
   @Field(() => String, { nullable: true, description: 'User email to add' })
   @IsEmail({}, { message: 'Please provide a valid email address' })
@@ -43,15 +43,15 @@ export class AddOrganizationMemberInput {
   description: 'Input payload for updating a member role',
 })
 export class UpdateMemberRoleInput {
-  @Field(() => Int, { description: 'Organization ID' })
-  @IsNumber()
-  @IsNotEmpty({ message: 'Organization ID is required' })
-  organizationId!: number;
+  @Field(() => String, { description: 'Organization identifier (pubId, slug, or ID)' })
+  @IsString()
+  @IsNotEmpty({ message: 'Organization identifier is required' })
+  organizationId!: string;
 
-  @Field(() => Int, { description: 'Target user ID' })
-  @IsNumber()
-  @IsNotEmpty({ message: 'User ID is required' })
-  userId!: number;
+  @Field(() => String, { description: 'Target user identifier (pubId, email, or ID)' })
+  @IsString()
+  @IsNotEmpty({ message: 'User identifier is required' })
+  userId!: string;
 
   @Field(() => OrganizationRole, {
     description: 'New organization role to assign',
@@ -65,28 +65,31 @@ export class UpdateMemberRoleInput {
   description: 'Input payload for removing a member from an organization',
 })
 export class RemoveMemberInput {
-  @Field(() => Int, { description: 'Organization ID' })
-  @IsNumber()
-  @IsNotEmpty({ message: 'Organization ID is required' })
-  organizationId!: number;
+  @Field(() => String, { description: 'Organization identifier (pubId, slug, or ID)' })
+  @IsString()
+  @IsNotEmpty({ message: 'Organization identifier is required' })
+  organizationId!: string;
 
-  @Field(() => Int, { description: 'Target user ID to remove' })
-  @IsNumber()
-  @IsNotEmpty({ message: 'User ID is required' })
-  userId!: number;
+  @Field(() => String, { description: 'Target user identifier (pubId, email, or ID) to remove' })
+  @IsString()
+  @IsNotEmpty({ message: 'User identifier is required' })
+  userId!: string;
 }
 
 @ObjectType('OrganizationMember', {
   description: 'Organization membership details',
 })
 export class OrganizationMemberResponseDto implements SanitizedOrganizationMember {
-  @Field(() => Int, { description: 'Unique membership identifier' })
+  @Field(() => Int, { description: 'Internal membership identifier' })
   id!: number;
 
-  @Field(() => Int, { description: 'Organization ID' })
+  @Field(() => String, { description: 'Public unique membership identifier' })
+  pubId!: string;
+
+  @Field(() => Int, { description: 'Organization internal ID' })
   organizationId!: number;
 
-  @Field(() => Int, { description: 'User ID' })
+  @Field(() => Int, { description: 'User internal ID' })
   userId!: number;
 
   @Field(() => OrganizationRole, {

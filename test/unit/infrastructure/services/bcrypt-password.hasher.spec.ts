@@ -25,7 +25,9 @@ describe('BcryptPasswordHasher', () => {
   });
 
   it('should throw error when hashing empty string', async () => {
-    await expect(hasher.hash('')).rejects.toThrowError('Password to hash cannot be empty');
+    await expect(hasher.hash('')).rejects.toThrowError(
+      'Password to hash cannot be empty',
+    );
   });
 
   it('should return false when comparing empty values', async () => {

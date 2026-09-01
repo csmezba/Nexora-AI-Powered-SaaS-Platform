@@ -40,7 +40,9 @@ describe('UserEntity (Domain Entity)', () => {
     expect(user.firstName).toBe('Johnny');
     expect(user.lastName).toBe('Silverhand');
     expect(user.fullName).toBe('Johnny Silverhand');
-    expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(beforeUpdate.getTime());
+    expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(
+      beforeUpdate.getTime(),
+    );
   });
 
   it('should update password with validation', () => {
@@ -49,7 +51,9 @@ describe('UserEntity (Domain Entity)', () => {
     user.updatePassword('$2a$10$newhash');
     expect(user.passwordHash).toBe('$2a$10$newhash');
 
-    expect(() => user.updatePassword('')).toThrowError('Password hash cannot be empty');
+    expect(() => user.updatePassword('')).toThrowError(
+      'Password hash cannot be empty',
+    );
   });
 
   it('should set and clear refresh token hash', () => {
@@ -73,7 +77,11 @@ describe('UserEntity (Domain Entity)', () => {
     expect(sanitized.id).toBe(1);
     expect(sanitized.email).toBe('test.user@example.com');
     expect(sanitized.fullName).toBe('John Doe');
-    expect((sanitized as unknown as Record<string, unknown>)['passwordHash']).toBeUndefined();
-    expect((sanitized as unknown as Record<string, unknown>)['refreshTokenHash']).toBeUndefined();
+    expect(
+      (sanitized as unknown as Record<string, unknown>)['passwordHash'],
+    ).toBeUndefined();
+    expect(
+      (sanitized as unknown as Record<string, unknown>)['refreshTokenHash'],
+    ).toBeUndefined();
   });
 });

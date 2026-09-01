@@ -1,8 +1,16 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 import type { SanitizedUser } from '../../domain/entities/user.entity.js';
 
-@InputType('RegisterInput', { description: 'Input payload for user registration' })
+@InputType('RegisterInput', {
+  description: 'Input payload for user registration',
+})
 export class RegisterDto {
   @Field(() => String, { description: 'Email address of the user' })
   @IsEmail({}, { message: 'Please provide a valid email address' })
@@ -39,7 +47,9 @@ export class LoginDto {
   password!: string;
 }
 
-@InputType('RefreshTokenInput', { description: 'Input payload for refreshing access token' })
+@InputType('RefreshTokenInput', {
+  description: 'Input payload for refreshing access token',
+})
 export class RefreshTokenDto {
   @Field(() => String, { description: 'Valid refresh token string' })
   @IsString()
@@ -71,7 +81,10 @@ export class UserResponseDto implements SanitizedUser {
   updatedAt!: Date;
 }
 
-@ObjectType('AuthResponse', { description: 'Authentication response payload containing tokens and user data' })
+@ObjectType('AuthResponse', {
+  description:
+    'Authentication response payload containing tokens and user data',
+})
 export class AuthResponseDto {
   @Field(() => UserResponseDto, { description: 'Authenticated user profile' })
   user!: UserResponseDto;
@@ -91,15 +104,22 @@ export class AuthResponseDto {
 
 @ObjectType('LogoutResponse', { description: 'Logout status response' })
 export class LogoutResponseDto {
-  @Field(() => Boolean, { description: 'Indicates whether the logout was successful' })
+  @Field(() => Boolean, {
+    description: 'Indicates whether the logout was successful',
+  })
   success!: boolean;
 }
 
-@ObjectType('MessageResponse', { description: 'Generic message response with user context' })
+@ObjectType('MessageResponse', {
+  description: 'Generic message response with user context',
+})
 export class MessageResponseDto {
   @Field(() => String, { description: 'Response status message' })
   message!: string;
 
-  @Field(() => UserResponseDto, { nullable: true, description: 'Associated user profile' })
+  @Field(() => UserResponseDto, {
+    nullable: true,
+    description: 'Associated user profile',
+  })
   user?: UserResponseDto;
 }

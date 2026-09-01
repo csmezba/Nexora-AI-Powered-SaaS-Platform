@@ -20,30 +20,42 @@ export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Mutation(() => AuthResponseDto, { description: 'Register a new user account' })
+  @Mutation(() => AuthResponseDto, {
+    description: 'Register a new user account',
+  })
   async register(@Args('input') dto: RegisterDto): Promise<AuthResponseDto> {
     return this.authService.register(dto);
   }
 
   @Public()
-  @Mutation(() => AuthResponseDto, { description: 'Authenticate user with email and password' })
+  @Mutation(() => AuthResponseDto, {
+    description: 'Authenticate user with email and password',
+  })
   async login(@Args('input') dto: LoginDto): Promise<AuthResponseDto> {
     return this.authService.login(dto);
   }
 
   @Public()
-  @Mutation(() => AuthResponseDto, { description: 'Refresh JWT access token using refresh token' })
-  async refreshToken(@Args('input') dto: RefreshTokenDto): Promise<AuthResponseDto> {
+  @Mutation(() => AuthResponseDto, {
+    description: 'Refresh JWT access token using refresh token',
+  })
+  async refreshToken(
+    @Args('input') dto: RefreshTokenDto,
+  ): Promise<AuthResponseDto> {
     return this.authService.refreshToken(dto);
   }
 
-  @Mutation(() => LogoutResponseDto, { description: 'Log out user by invalidating session' })
+  @Mutation(() => LogoutResponseDto, {
+    description: 'Log out user by invalidating session',
+  })
   async logout(@CurrentUser('id') userId: number): Promise<LogoutResponseDto> {
     const success = await this.authService.logout(userId);
     return { success };
   }
 
-  @Query(() => UserResponseDto, { description: 'Fetch current logged in user profile' })
+  @Query(() => UserResponseDto, {
+    description: 'Fetch current logged in user profile',
+  })
   async me(@CurrentUser() user: SanitizedUser): Promise<UserResponseDto> {
     return user;
   }

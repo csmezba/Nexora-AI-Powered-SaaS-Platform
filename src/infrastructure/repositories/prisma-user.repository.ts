@@ -33,10 +33,17 @@ export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   private get userModel(): PrismaUserOrmModel {
-    const orm = this.prisma.db.orm as unknown as Record<string, PrismaUserOrmModel>;
-    return orm['User'] || (orm['public'] as unknown as Record<string, PrismaUserOrmModel>)?.[
-      'User'
-    ] || orm['user']!;
+    const orm = this.prisma.db.orm as unknown as Record<
+      string,
+      PrismaUserOrmModel
+    >;
+    return (
+      orm['User'] ||
+      (orm['public'] as unknown as Record<string, PrismaUserOrmModel>)?.[
+        'User'
+      ] ||
+      orm['user']!
+    );
   }
 
   private toEntity(record: PrismaUserRecord): UserEntity {
@@ -60,7 +67,9 @@ export class PrismaUserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<UserEntity | null> {
     const normalizedEmail = email.toLowerCase().trim();
     const record = await this.userModel
-      .where((u: { email: { eq: (val: string) => unknown } }) => u.email.eq(normalizedEmail))
+      .where((u: { email: { eq: (val: string) => unknown } }) =>
+        u.email.eq(normalizedEmail),
+      )
       .first();
     return record ? this.toEntity(record) : null;
   }
@@ -83,10 +92,13 @@ export class PrismaUserRepository implements IUserRepository {
   async update(id: number, data: UpdateUserData): Promise<UserEntity> {
     const updatePayload: Record<string, unknown> = {};
 
-    if (data.passwordHash !== undefined) updatePayload['password'] = data.passwordHash;
-    if (data.firstName !== undefined) updatePayload['firstName'] = data.firstName;
+    if (data.passwordHash !== undefined)
+      updatePayload['password'] = data.passwordHash;
+    if (data.firstName !== undefined)
+      updatePayload['firstName'] = data.firstName;
     if (data.lastName !== undefined) updatePayload['lastName'] = data.lastName;
-    if (data.refreshTokenHash !== undefined) updatePayload['refreshTokenHash'] = data.refreshTokenHash;
+    if (data.refreshTokenHash !== undefined)
+      updatePayload['refreshTokenHash'] = data.refreshTokenHash;
 
     updatePayload['updatedAt'] = new Date().toISOString();
 

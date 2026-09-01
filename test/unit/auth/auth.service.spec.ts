@@ -1,5 +1,9 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { ConflictException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from '../../../src/auth/auth.service.js';
 import { UserEntity } from '../../../src/domain/entities/user.entity.js';
 import { IUserRepository } from '../../../src/domain/repositories/user-repository.interface.js';
@@ -55,7 +59,9 @@ describe('AuthService', () => {
   describe('register', () => {
     it('should register a new user successfully and return tokens', async () => {
       vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(null);
-      vi.mocked(mockPasswordHasher.hash).mockImplementation(async (val) => `hashed_${val}`);
+      vi.mocked(mockPasswordHasher.hash).mockImplementation(
+        async (val) => `hashed_${val}`,
+      );
       vi.mocked(mockUserRepository.create).mockResolvedValue(mockUserEntity);
       vi.mocked(mockTokenService.generateTokens).mockResolvedValue({
         accessToken: 'access.jwt.token',
@@ -84,7 +90,9 @@ describe('AuthService', () => {
     });
 
     it('should throw ConflictException if email is already taken', async () => {
-      vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(mockUserEntity);
+      vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(
+        mockUserEntity,
+      );
 
       await expect(
         authService.register({
@@ -97,7 +105,9 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('should login successfully with valid credentials', async () => {
-      vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(mockUserEntity);
+      vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(
+        mockUserEntity,
+      );
       vi.mocked(mockPasswordHasher.compare).mockResolvedValue(true);
       vi.mocked(mockPasswordHasher.hash).mockResolvedValue('hashed_refresh');
       vi.mocked(mockTokenService.generateTokens).mockResolvedValue({
@@ -130,7 +140,9 @@ describe('AuthService', () => {
     });
 
     it('should throw UnauthorizedException if password does not match', async () => {
-      vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(mockUserEntity);
+      vi.mocked(mockUserRepository.findByEmail).mockResolvedValue(
+        mockUserEntity,
+      );
       vi.mocked(mockPasswordHasher.compare).mockResolvedValue(false);
 
       await expect(
@@ -188,7 +200,9 @@ describe('AuthService', () => {
 
       const result = await authService.logout(1);
       expect(result).toBe(true);
-      expect(mockUserRepository.update).toHaveBeenCalledWith(1, { refreshTokenHash: null });
+      expect(mockUserRepository.update).toHaveBeenCalledWith(1, {
+        refreshTokenHash: null,
+      });
     });
   });
 
@@ -204,7 +218,9 @@ describe('AuthService', () => {
     it('should throw NotFoundException if user not found', async () => {
       vi.mocked(mockUserRepository.findById).mockResolvedValue(null);
 
-      await expect(authService.getProfile(99)).rejects.toThrowError(NotFoundException);
+      await expect(authService.getProfile(99)).rejects.toThrowError(
+        NotFoundException,
+      );
     });
   });
 });

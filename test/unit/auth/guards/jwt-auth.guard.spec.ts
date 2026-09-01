@@ -31,7 +31,9 @@ describe('JwtAuthGuard', () => {
     mockUserRepository,
   );
 
-  const createMockContext = (authHeader?: string): { context: ExecutionContext; req: Record<string, unknown> } => {
+  const createMockContext = (
+    authHeader?: string,
+  ): { context: ExecutionContext; req: Record<string, unknown> } => {
     const req: Record<string, unknown> = {
       headers: {
         authorization: authHeader,
@@ -107,7 +109,9 @@ describe('JwtAuthGuard', () => {
     mockReflector.getAllAndOverride.mockReturnValue(false);
     const { context } = createMockContext('Bearer bad-token');
 
-    mockTokenService.verifyAccessToken.mockRejectedValue(new Error('Invalid signature'));
+    mockTokenService.verifyAccessToken.mockRejectedValue(
+      new Error('Invalid signature'),
+    );
 
     await expect(guard.canActivate(context)).rejects.toThrowError(
       'Invalid or expired authentication token',

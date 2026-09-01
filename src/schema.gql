@@ -2,6 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""Input payload for adding a member to an organization"""
+input AddOrganizationMemberInput {
+  """User email to add"""
+  email: String
+
+  """Organization ID"""
+  organizationId: Int!
+
+  """Assigned organization role"""
+  role: OrganizationRole = MEMBER
+
+  """User ID to add"""
+  userId: Int
+}
+
 """Authentication response payload containing tokens and user data"""
 type AuthResponse {
   """JWT Access Token"""
@@ -20,10 +35,34 @@ type AuthResponse {
   user: User!
 }
 
+"""Input payload for creating a new organization"""
+input CreateOrganizationInput {
+  """Description or bio of the organization"""
+  description: String
+
+  """Organization logo URL"""
+  logoUrl: String
+
+  """Display name of the organization"""
+  name: String
+
+  """Unique URL-friendly slug identifier for the organization"""
+  slug: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+"""Response payload for deleting an organization"""
+type DeleteOrganizationResponse {
+  """Status message"""
+  message: String!
+
+  """Indicates whether the organization was deleted successfully"""
+  success: Boolean!
+}
 
 """Input payload for user login"""
 input LoginInput {
@@ -40,7 +79,31 @@ type LogoutResponse {
   success: Boolean!
 }
 
+"""Response payload for member modification operations"""
+type MemberActionResponse {
+  """Updated member record"""
+  member: OrganizationMember
+
+  """Status message"""
+  message: String!
+
+  """Indicates whether the action was successful"""
+  success: Boolean!
+}
+
 type Mutation {
+  """Add a new member to an organization (Requires OWNER or ADMIN role)"""
+  addOrganizationMember(input: AddOrganizationMemberInput!): MemberActionResponse!
+
+  """Create a new organization and assign the creator as OWNER"""
+  createOrganization(input: CreateOrganizationInput!): Organization!
+
+  """Delete an organization (Requires OWNER role)"""
+  deleteOrganization(id: Int!): DeleteOrganizationResponse!
+
+  """Leave an organization as a member"""
+  leaveOrganization(organizationId: Int!): MemberActionResponse!
+
   """Authenticate user with email and password"""
   login(input: LoginInput!): AuthResponse!
 
@@ -52,11 +115,102 @@ type Mutation {
 
   """Register a new user account"""
   register(input: RegisterInput!): AuthResponse!
+
+  """Remove a member from an organization (Requires OWNER or ADMIN role)"""
+  removeOrganizationMember(input: RemoveMemberInput!): MemberActionResponse!
+
+  """Update organization details (Requires OWNER or ADMIN role)"""
+  updateOrganization(id: Int!, input: UpdateOrganizationInput!): Organization!
+
+  """
+  Update a member role within an organization (Requires OWNER or ADMIN role)
+  """
+  updateOrganizationMemberRole(input: UpdateMemberRoleInput!): MemberActionResponse!
+}
+
+"""Organization details"""
+type Organization {
+  """Organization creation timestamp"""
+  createdAt: DateTime!
+
+  """Current logged in user role in this organization"""
+  currentUserRole: OrganizationRole
+
+  """Organization description"""
+  description: String
+
+  """Unique organization identifier"""
+  id: Int!
+
+  """Organization logo URL"""
+  logoUrl: String
+
+  """Total number of organization members"""
+  memberCount: Int
+
+  """Organization display name"""
+  name: String
+
+  """Unique URL slug identifier"""
+  slug: String!
+
+  """Organization last updated timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Organization membership details"""
+type OrganizationMember {
+  """Unique membership identifier"""
+  id: Int!
+
+  """Timestamp when member joined"""
+  joinedAt: DateTime!
+
+  """Organization ID"""
+  organizationId: Int!
+
+  """Assigned role in organization"""
+  role: OrganizationRole!
+
+  """User profile of the member"""
+  user: User
+
+  """User ID"""
+  userId: Int!
+}
+
+"""Role of a member within an organization"""
+enum OrganizationRole {
+  ACCOUNTANT
+  ADMIN
+  DESIGNER
+  DEVELOPER
+  MANAGER
+  MARKETING
+  MEMBER
+  OWNER
+  QA
+  SALES
+  VIEWER
 }
 
 type Query {
   """Fetch current logged in user profile"""
   me: User!
+
+  """Fetch all organizations the authenticated user is a member of"""
+  myOrganizations: [Organization!]!
+
+  """Fetch organization details by unique ID"""
+  organizationById(id: Int!): Organization!
+
+  """Fetch organization details by unique slug"""
+  organizationBySlug(slug: String!): Organization!
+
+  """
+  Fetch all members belonging to an organization with their user profiles
+  """
+  organizationMembers(organizationId: Int!): [OrganizationMember!]!
 }
 
 """Input payload for refreshing access token"""
@@ -78,6 +232,42 @@ input RegisterInput {
 
   """Password (minimum 6 characters)"""
   password: String!
+}
+
+"""Input payload for removing a member from an organization"""
+input RemoveMemberInput {
+  """Organization ID"""
+  organizationId: Int!
+
+  """Target user ID to remove"""
+  userId: Int!
+}
+
+"""Input payload for updating a member role"""
+input UpdateMemberRoleInput {
+  """Organization ID"""
+  organizationId: Int!
+
+  """New organization role to assign"""
+  role: OrganizationRole!
+
+  """Target user ID"""
+  userId: Int!
+}
+
+"""Input payload for updating an organization"""
+input UpdateOrganizationInput {
+  """Description or bio of the organization"""
+  description: String
+
+  """Organization logo URL"""
+  logoUrl: String
+
+  """Display name of the organization"""
+  name: String
+
+  """Unique URL-friendly slug identifier for the organization"""
+  slug: String
 }
 
 """Sanitized user profile information"""

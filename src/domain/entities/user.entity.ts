@@ -85,7 +85,10 @@ export class UserEntity {
     this._updatedAt = new Date();
   }
 
-  public updateProfile(params: { firstName?: string | null; lastName?: string | null }): void {
+  public updateProfile(params: {
+    firstName?: string | null;
+    lastName?: string | null;
+  }): void {
     if (params.firstName !== undefined) {
       this._firstName = params.firstName;
     }

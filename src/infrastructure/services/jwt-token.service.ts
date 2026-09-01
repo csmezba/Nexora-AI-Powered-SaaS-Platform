@@ -14,10 +14,19 @@ export class JwtTokenService implements ITokenService {
   private readonly refreshExpiresIn: number; // in seconds
 
   constructor(private readonly jwtService: JwtService) {
-    this.accessSecret = process.env['JWT_SECRET'] || 'default-access-secret-key-replace-in-prod';
-    this.refreshSecret = process.env['JWT_REFRESH_SECRET'] || 'default-refresh-secret-key-replace-in-prod';
-    this.accessExpiresIn = parseInt(process.env['JWT_EXPIRES_IN'] || '3600', 10); // 1 hour
-    this.refreshExpiresIn = parseInt(process.env['JWT_REFRESH_EXPIRES_IN'] || '604800', 10); // 7 days
+    this.accessSecret =
+      process.env['JWT_SECRET'] || 'default-access-secret-key-replace-in-prod';
+    this.refreshSecret =
+      process.env['JWT_REFRESH_SECRET'] ||
+      'default-refresh-secret-key-replace-in-prod';
+    this.accessExpiresIn = parseInt(
+      process.env['JWT_EXPIRES_IN'] || '3600',
+      10,
+    ); // 1 hour
+    this.refreshExpiresIn = parseInt(
+      process.env['JWT_REFRESH_EXPIRES_IN'] || '604800',
+      10,
+    ); // 7 days
   }
 
   async generateAccessToken(payload: TokenPayload): Promise<string> {

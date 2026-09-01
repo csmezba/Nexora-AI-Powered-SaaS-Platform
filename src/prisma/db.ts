@@ -5,5 +5,7 @@ import contractJson from './contract.json' with { type: 'json' };
 
 export const db = postgres<Contract>({
   contractJson,
-  url: process.env['DATABASE_URL'] || 'postgresql://postgres:postgres@localhost:5432/nexora_db',
+  url:
+    process.env['DATABASE_URL'] ||
+    'postgresql://postgres:postgres@localhost:5432/nexora_db',
 });

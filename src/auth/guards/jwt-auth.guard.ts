@@ -58,7 +58,9 @@ export class JwtAuthGuard implements CanActivate {
       if (err instanceof UnauthorizedException) {
         throw err;
       }
-      throw new UnauthorizedException('Invalid or expired authentication token');
+      throw new UnauthorizedException(
+        'Invalid or expired authentication token',
+      );
     }
   }
 

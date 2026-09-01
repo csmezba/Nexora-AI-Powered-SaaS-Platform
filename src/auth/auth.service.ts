@@ -37,7 +37,9 @@ export class AuthService {
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
     const existing = await this.userRepository.findByEmail(dto.email);
     if (existing) {
-      throw new ConflictException(`User with email "${dto.email}" already exists`);
+      throw new ConflictException(
+        `User with email "${dto.email}" already exists`,
+      );
     }
 
     const passwordHash = await this.passwordHasher.hash(dto.password);
@@ -54,7 +56,9 @@ export class AuthService {
     };
 
     const tokens = await this.tokenService.generateTokens(tokenPayload);
-    const refreshTokenHash = await this.passwordHasher.hash(tokens.refreshToken);
+    const refreshTokenHash = await this.passwordHasher.hash(
+      tokens.refreshToken,
+    );
     await this.userRepository.update(user.id, { refreshTokenHash });
 
     return {
@@ -86,7 +90,9 @@ export class AuthService {
     };
 
     const tokens = await this.tokenService.generateTokens(tokenPayload);
-    const refreshTokenHash = await this.passwordHasher.hash(tokens.refreshToken);
+    const refreshTokenHash = await this.passwordHasher.hash(
+      tokens.refreshToken,
+    );
     await this.userRepository.update(user.id, { refreshTokenHash });
 
     return {
@@ -99,7 +105,9 @@ export class AuthService {
   }
 
   async refreshToken(dto: RefreshTokenDto): Promise<AuthResponseDto> {
-    const payload = await this.tokenService.verifyRefreshToken(dto.refreshToken);
+    const payload = await this.tokenService.verifyRefreshToken(
+      dto.refreshToken,
+    );
     const user = await this.userRepository.findById(payload.sub);
 
     if (!user || !user.refreshTokenHash) {
@@ -112,7 +120,9 @@ export class AuthService {
     );
 
     if (!isRefreshMatch) {
-      throw new UnauthorizedException('Refresh token has been revoked or invalidated');
+      throw new UnauthorizedException(
+        'Refresh token has been revoked or invalidated',
+      );
     }
 
     const tokenPayload: TokenPayload = {
@@ -121,8 +131,12 @@ export class AuthService {
     };
 
     const tokens = await this.tokenService.generateTokens(tokenPayload);
-    const newRefreshTokenHash = await this.passwordHasher.hash(tokens.refreshToken);
-    await this.userRepository.update(user.id, { refreshTokenHash: newRefreshTokenHash });
+    const newRefreshTokenHash = await this.passwordHasher.hash(
+      tokens.refreshToken,
+    );
+    await this.userRepository.update(user.id, {
+      refreshTokenHash: newRefreshTokenHash,
+    });
 
     return {
       user: user.sanitize(),

@@ -38,12 +38,12 @@ describe('JwtTokenService', () => {
   });
 
   it('should reject invalid or tampered tokens', async () => {
-    await expect(tokenService.verifyAccessToken('invalid.jwt.token')).rejects.toThrowError(
-      'Invalid or expired access token',
-    );
+    await expect(
+      tokenService.verifyAccessToken('invalid.jwt.token'),
+    ).rejects.toThrowError('Invalid or expired access token');
 
-    await expect(tokenService.verifyRefreshToken('invalid.jwt.token')).rejects.toThrowError(
-      'Invalid or expired refresh token',
-    );
+    await expect(
+      tokenService.verifyRefreshToken('invalid.jwt.token'),
+    ).rejects.toThrowError('Invalid or expired refresh token');
   });
 });

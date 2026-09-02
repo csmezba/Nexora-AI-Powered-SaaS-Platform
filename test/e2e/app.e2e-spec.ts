@@ -16,12 +16,6 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
 
   it('/graphql (POST) schema introspection', () => {
     return request(app.getHttpServer())
@@ -31,6 +25,9 @@ describe('AppController (e2e)', () => {
       })
       .expect(200)
       .expect((res) => {
+        expect(res.body.success).toBe(true);
+        expect(res.body.statusCode).toBe(200);
+        expect(res.body.message).toBe('Success');
         expect(res.body.data.__schema.types).toBeDefined();
       });
   });

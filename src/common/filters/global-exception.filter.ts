@@ -10,11 +10,19 @@ import { GqlContextType } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import type { Response } from 'express';
 
-export interface GlobalErrorResponse {
+export interface GlobalErrorResponseItem {
   message: string;
   success: boolean;
   statusCode: number;
   error: string;
+}
+
+export interface GlobalErrorResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  errors: GlobalErrorResponseItem[];
+  data: null;
 }
 
 @Catch()
@@ -59,7 +67,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception instanceof Error ? exception.stack : undefined,
     );
 
-    const errorPayload: GlobalErrorResponse = {
+    const errorItem: GlobalErrorResponseItem = {
       message: errorMsg,
       success: false,
       statusCode,
@@ -70,10 +78,18 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     if (hostType === 'graphql') {
       return new GraphQLError(errorMsg, {
         extensions: {
-          ...errorPayload,
+          ...errorItem,
         },
       });
     }
+
+    const errorPayload: GlobalErrorResponse = {
+      success: false,
+      statusCode,
+      message: errorMsg,
+      errors: [errorItem],
+      data: null,
+    };
 
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();

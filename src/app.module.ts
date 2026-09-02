@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
@@ -8,6 +8,9 @@ import { UserModule } from './user/user.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { OrganizationModule } from './organization/organization.module.js';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter.js';
+import { ResponseFormatPlugin } from './common/plugins/response-format.plugin.js';
+import { TransformResponseInterceptor } from './common/interceptors/transform-response.interceptor.js';
+import { ResponseTransformMiddleware } from './common/middlewares/response-transform.middleware.js';
 
 @Module({
   imports: [
@@ -51,10 +54,19 @@ import { GlobalExceptionFilter } from './common/filters/global-exception.filter.
   ],
   controllers: [],
   providers: [
+    ResponseFormatPlugin,
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformResponseInterceptor,
+    },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ResponseTransformMiddleware).forRoutes('*');
+  }
+}

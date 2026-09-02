@@ -32,10 +32,18 @@ describe('GlobalExceptionFilter', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
       expect(mockJson).toHaveBeenCalledWith({
-        message: 'Resource not found',
         success: false,
         statusCode: HttpStatus.NOT_FOUND,
-        error: 'Resource not found',
+        message: 'Resource not found',
+        errors: [
+          {
+            message: 'Resource not found',
+            success: false,
+            statusCode: HttpStatus.NOT_FOUND,
+            error: 'Resource not found',
+          },
+        ],
+        data: null,
       });
     });
 
@@ -61,10 +69,18 @@ describe('GlobalExceptionFilter', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
       expect(mockJson).toHaveBeenCalledWith({
-        message: 'email must be valid, password is too short',
         success: false,
         statusCode: HttpStatus.BAD_REQUEST,
-        error: 'email must be valid, password is too short',
+        message: 'email must be valid, password is too short',
+        errors: [
+          {
+            message: 'email must be valid, password is too short',
+            success: false,
+            statusCode: HttpStatus.BAD_REQUEST,
+            error: 'email must be valid, password is too short',
+          },
+        ],
+        data: null,
       });
     });
 
@@ -85,10 +101,18 @@ describe('GlobalExceptionFilter', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
       expect(mockJson).toHaveBeenCalledWith({
-        message: 'Database connection failed',
         success: false,
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: 'Database connection failed',
+        message: 'Database connection failed',
+        errors: [
+          {
+            message: 'Database connection failed',
+            success: false,
+            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: 'Database connection failed',
+          },
+        ],
+        data: null,
       });
     });
 
@@ -108,10 +132,18 @@ describe('GlobalExceptionFilter', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
       expect(mockJson).toHaveBeenCalledWith({
-        message: 'Internal server error',
         success: false,
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: 'Internal server error',
+        message: 'Internal server error',
+        errors: [
+          {
+            message: 'Internal server error',
+            success: false,
+            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: 'Internal server error',
+          },
+        ],
+        data: null,
       });
     });
   });

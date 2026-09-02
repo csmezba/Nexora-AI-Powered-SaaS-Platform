@@ -250,6 +250,7 @@ model OrganizationMember {
 
 model Role {
   id             Int     @id @default(autoincrement())
+  pubId          String  @unique
   name           String
   description    String?
 
@@ -273,6 +274,7 @@ model Role {
 
 model Permission {
   id          Int     @id @default(autoincrement())
+  pubId       String  @unique
   resource    String
   action      String
   description String?
@@ -286,6 +288,7 @@ model Permission {
 }
 
 model RolePermission {
+  pubId        String @unique
   roleId       Int
   permissionId Int
 
@@ -308,6 +311,7 @@ model RolePermission {
 }
 
 model OrganizationMemberRole {
+  pubId                String @unique
   organizationMemberId Int
   roleId               Int
 
@@ -331,6 +335,7 @@ model OrganizationMemberRole {
 
 model UserSession {
   id           Int      @id @default(autoincrement())
+  pubId        String   @unique
   userId       Int
 
   refreshToken String
@@ -351,6 +356,7 @@ model UserSession {
 
 model OAuthAccount {
   id                Int           @id @default(autoincrement())
+  pubId             String        @unique
   userId            Int
 
   provider          OAuthProvider
@@ -375,6 +381,7 @@ model OAuthAccount {
 
 model Team {
   id             Int     @id @default(autoincrement())
+  pubId          String  @unique
   organizationId Int
 
   name           String
@@ -397,8 +404,9 @@ model Team {
 }
 
 model TeamMember {
-  teamId Int
-  userId Int
+  pubId    String @unique
+  teamId   Int
+  userId   Int
 
   team Team @relation(
     fields: [teamId],
@@ -420,6 +428,7 @@ model TeamMember {
 
 model Project {
   id             Int           @id @default(autoincrement())
+  pubId          String        @unique
 
   organizationId Int
   teamId         Int?
@@ -466,6 +475,7 @@ model Project {
 }
 
 model ProjectMember {
+  pubId     String @unique
   projectId Int
   userId    Int
 
@@ -489,6 +499,7 @@ model ProjectMember {
 
 model Task {
   id           Int          @id @default(autoincrement())
+  pubId        String       @unique
 
   projectId    Int
   createdById  Int
@@ -541,6 +552,7 @@ model Task {
 }
 
 model TaskAssignee {
+  pubId  String @unique
   taskId Int
   userId Int
 
@@ -564,6 +576,7 @@ model TaskAssignee {
 
 model Label {
   id             Int     @id @default(autoincrement())
+  pubId          String  @unique
 
   organizationId Int
 
@@ -583,6 +596,7 @@ model Label {
 }
 
 model TaskLabel {
+  pubId   String @unique
   taskId  Int
   labelId Int
 
@@ -604,6 +618,7 @@ model TaskLabel {
 
 model TaskComment {
   id        Int     @id @default(autoincrement())
+  pubId     String  @unique
 
   taskId    Int
   authorId  Int
@@ -632,6 +647,7 @@ model TaskComment {
 
 model TaskDependency {
   id              Int            @id @default(autoincrement())
+  pubId           String         @unique
 
   taskId          Int
   dependsOnTaskId Int
@@ -658,6 +674,7 @@ model TaskDependency {
 
 model Sprint {
   id        Int          @id @default(autoincrement())
+  pubId     String       @unique
   projectId Int
 
   name      String
@@ -683,6 +700,7 @@ model Sprint {
 }
 
 model SprintTask {
+  pubId    String @unique
   sprintId Int
   taskId   Int
 
@@ -704,6 +722,7 @@ model SprintTask {
 
 model Customer {
   id             Int      @id @default(autoincrement())
+  pubId          String   @unique
   organizationId Int
 
   name           String
@@ -731,6 +750,7 @@ model Customer {
 
 model Conversation {
   id           Int      @id @default(autoincrement())
+  pubId        String   @unique
   customerId   Int
 
   title        String?
@@ -752,6 +772,7 @@ model Conversation {
 }
 
 model ConversationParticipant {
+  pubId          String @unique
   conversationId Int
   userId         Int
 
@@ -775,6 +796,7 @@ model ConversationParticipant {
 
 model Message {
   id             Int         @id @default(autoincrement())
+  pubId          String      @unique
 
   conversationId Int
   senderId       Int?
@@ -805,6 +827,7 @@ model Message {
 
 model Ticket {
   id             Int            @id @default(autoincrement())
+  pubId          String         @unique
 
   customerId     Int
   conversationId Int?
@@ -849,6 +872,7 @@ model Ticket {
 
 model TicketComment {
   id        Int     @id @default(autoincrement())
+  pubId     String  @unique
 
   ticketId  Int
   authorId  Int
@@ -877,6 +901,7 @@ model TicketComment {
 
 model KnowledgeBase {
   id             Int     @id @default(autoincrement())
+  pubId          String  @unique
 
   organizationId Int
 
@@ -899,6 +924,7 @@ model KnowledgeBase {
 
 model KnowledgeDocument {
   id              Int            @id @default(autoincrement())
+  pubId           String         @unique
 
   knowledgeBaseId Int
 
@@ -925,6 +951,7 @@ model KnowledgeDocument {
 
 model DocumentChunk {
   id         Int     @id @default(autoincrement())
+  pubId      String  @unique
 
   documentId Int
 
@@ -949,6 +976,7 @@ model DocumentChunk {
 
 model AIConversation {
   id             Int     @id @default(autoincrement())
+  pubId          String  @unique
 
   organizationId Int
   userId         Int
@@ -978,6 +1006,7 @@ model AIConversation {
 
 model AIMessage {
   id               Int           @id @default(autoincrement())
+  pubId            String        @unique
 
   conversationId   Int
 
@@ -1001,6 +1030,7 @@ model AIMessage {
 
 model AIUsage {
   id               Int     @id @default(autoincrement())
+  pubId            String  @unique
 
   organizationId   Int
   userId           Int?
@@ -1034,6 +1064,7 @@ model AIUsage {
 
 model Plan {
   id            Int      @id @default(autoincrement())
+  pubId         String   @unique
 
   name          String
   description   String?
@@ -1055,6 +1086,7 @@ model Plan {
 
 model Subscription {
   id                 Int                @id @default(autoincrement())
+  pubId              String             @unique
 
   organizationId     Int                @unique
   planId             Int
@@ -1086,6 +1118,7 @@ model Subscription {
 
 model Invoice {
   id             Int           @id @default(autoincrement())
+  pubId          String        @unique
 
   organizationId Int
   subscriptionId Int
@@ -1120,6 +1153,7 @@ model Invoice {
 
 model Payment {
   id                Int           @id @default(autoincrement())
+  pubId             String        @unique
 
   organizationId    Int
   invoiceId         Int
@@ -1153,6 +1187,7 @@ model Payment {
 
 model Notification {
   id             Int              @id @default(autoincrement())
+  pubId          String           @unique
 
   organizationId Int
   userId         Int
@@ -1187,6 +1222,7 @@ model Notification {
 
 model AuditLog {
   id             Int     @id @default(autoincrement())
+  pubId          String  @unique
 
   organizationId Int
   userId         Int?
@@ -1222,6 +1258,7 @@ model AuditLog {
 
 model Integration {
   id             Int                 @id @default(autoincrement())
+  pubId          String              @unique
 
   organizationId Int
 
@@ -1249,6 +1286,7 @@ model Integration {
 
 model ApiKey {
   id             Int       @id @default(autoincrement())
+  pubId          String    @unique
 
   organizationId Int
 
@@ -1270,6 +1308,7 @@ model ApiKey {
   @@index([organizationId])
   @@index([keyPrefix])
 }
+
 
 
 

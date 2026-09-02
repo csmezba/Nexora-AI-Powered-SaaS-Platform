@@ -58,8 +58,8 @@ export class RefreshTokenDto {
 }
 
 @ObjectType('User', { description: 'Sanitized user profile information' })
-export class UserResponseDto implements SanitizedUser {
-  id!: number;
+export class UserResponseDto {
+  // id!: number;
 
   @Field(() => String, { description: 'Public unique user identifier' })
   pubId!: string;

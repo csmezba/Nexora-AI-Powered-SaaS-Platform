@@ -615,6 +615,13 @@
                   "kind": "scalar"
                 }
               },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "title": {
                 "nullable": true,
                 "type": {
@@ -695,6 +702,9 @@
                 "organizationId": {
                   "column": "organizationId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "title": {
                   "column": "title"
                 },
@@ -760,6 +770,13 @@
                   "kind": "scalar"
                 }
               },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "role": {
                 "nullable": false,
                 "type": {
@@ -814,6 +831,9 @@
                 "promptTokens": {
                   "column": "promptTokens"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "role": {
                   "column": "role"
                 }
@@ -867,6 +887,13 @@
                 }
               },
               "provider": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -950,6 +977,9 @@
                 "provider": {
                   "column": "provider"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "requestCount": {
                   "column": "requestCount"
                 },
@@ -1021,6 +1051,13 @@
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {
@@ -1065,6 +1102,9 @@
                 },
                 "organizationId": {
                   "column": "organizationId"
+                },
+                "pubId": {
+                  "column": "pubId"
                 }
               },
               "namespaceId": "public",
@@ -1119,6 +1159,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -1206,6 +1253,9 @@
                 "organizationId": {
                   "column": "organizationId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "resourceId": {
                   "column": "resourceId"
                 },
@@ -1243,6 +1293,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -1334,6 +1391,9 @@
                 "id": {
                   "column": "id"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "title": {
                   "column": "title"
                 },
@@ -1358,6 +1418,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -1408,6 +1475,9 @@
                 },
                 "joinedAt": {
                   "column": "joinedAt"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "userId": {
                   "column": "userId"
@@ -1470,6 +1540,13 @@
               },
               "phone": {
                 "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -1556,6 +1633,9 @@
                 "phone": {
                   "column": "phone"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "updatedAt": {
                   "column": "updatedAt"
                 }
@@ -1614,6 +1694,13 @@
                   "codecId": "pg/json@1",
                   "kind": "scalar"
                 }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {
@@ -1655,6 +1742,9 @@
                 },
                 "metadata": {
                   "column": "metadata"
+                },
+                "pubId": {
+                  "column": "pubId"
                 }
               },
               "namespaceId": "public",
@@ -1718,6 +1808,13 @@
                   "plane": "domain"
                 }
               },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "refreshToken": {
                 "nullable": true,
                 "type": {
@@ -1772,6 +1869,9 @@
                 },
                 "provider": {
                   "column": "provider"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "refreshToken": {
                   "column": "refreshToken"
@@ -1832,6 +1932,13 @@
                 "nullable": true,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -1926,6 +2033,9 @@
                 "paidAt": {
                   "column": "paidAt"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "status": {
                   "column": "status"
                 },
@@ -1971,6 +2081,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -2031,6 +2148,9 @@
                 "organizationId": {
                   "column": "organizationId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "updatedAt": {
                   "column": "updatedAt"
                 }
@@ -2078,6 +2198,13 @@
               },
               "mimeType": {
                 "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -2163,6 +2290,9 @@
                 "mimeType": {
                   "column": "mimeType"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "status": {
                   "column": "status"
                 },
@@ -2204,6 +2334,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               }
@@ -2253,6 +2390,9 @@
                 },
                 "organizationId": {
                   "column": "organizationId"
+                },
+                "pubId": {
+                  "column": "pubId"
                 }
               },
               "namespaceId": "public",
@@ -2293,6 +2433,13 @@
                 "nullable": true,
                 "type": {
                   "codecId": "pg/json@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -2373,6 +2520,9 @@
                 "metadata": {
                   "column": "metadata"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "senderId": {
                   "column": "senderId"
                 },
@@ -2421,6 +2571,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -2515,6 +2672,9 @@
                 "organizationId": {
                   "column": "organizationId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "resourceId": {
                   "column": "resourceId"
                 },
@@ -2585,6 +2745,13 @@
                   "kind": "scalar"
                 }
               },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "refreshToken": {
                 "nullable": true,
                 "type": {
@@ -2643,6 +2810,9 @@
                 },
                 "providerAccountId": {
                   "column": "providerAccountId"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "refreshToken": {
                   "column": "refreshToken"
@@ -3129,6 +3299,13 @@
                   "kind": "scalar"
                 }
               },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "roleId": {
                 "nullable": false,
                 "type": {
@@ -3176,6 +3353,9 @@
                 },
                 "organizationMemberId": {
                   "column": "organizationMemberId"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "roleId": {
                   "column": "roleId"
@@ -3238,6 +3418,13 @@
               },
               "providerPaymentId": {
                 "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -3315,6 +3502,9 @@
                 "providerPaymentId": {
                   "column": "providerPaymentId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "status": {
                   "column": "status"
                 }
@@ -3350,6 +3540,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -3398,6 +3595,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "resource": {
                   "column": "resource"
@@ -3482,6 +3682,13 @@
                   "kind": "scalar"
                 }
               },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "updatedAt": {
                 "nullable": false,
                 "type": {
@@ -3538,6 +3745,9 @@
                 },
                 "priceYearly": {
                   "column": "priceYearly"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "updatedAt": {
                   "column": "updatedAt"
@@ -3602,6 +3812,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -3758,6 +3975,9 @@
                 "organizationId": {
                   "column": "organizationId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "startDate": {
                   "column": "startDate"
                 },
@@ -3788,6 +4008,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -3839,6 +4066,9 @@
                 "projectId": {
                   "column": "projectId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "userId": {
                   "column": "userId"
                 }
@@ -3881,6 +4111,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -3956,6 +4193,9 @@
                 "organizationId": {
                   "column": "organizationId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "updatedAt": {
                   "column": "updatedAt"
                 }
@@ -3977,6 +4217,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -4028,6 +4275,9 @@
                 "permissionId": {
                   "column": "permissionId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "roleId": {
                   "column": "roleId"
                 }
@@ -4077,6 +4327,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -4160,6 +4417,9 @@
                 "projectId": {
                   "column": "projectId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "startDate": {
                   "column": "startDate"
                 },
@@ -4176,6 +4436,13 @@
           },
           "SprintTask": {
             "fields": {
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "sprintId": {
                 "nullable": false,
                 "type": {
@@ -4225,6 +4492,9 @@
             },
             "storage": {
               "fields": {
+                "pubId": {
+                  "column": "pubId"
+                },
                 "sprintId": {
                   "column": "sprintId"
                 },
@@ -4277,6 +4547,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -4368,6 +4645,9 @@
                 "planId": {
                   "column": "planId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "startedAt": {
                   "column": "startedAt"
                 },
@@ -4454,6 +4734,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -4669,6 +4956,9 @@
                 "projectId": {
                   "column": "projectId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "status": {
                   "column": "status"
                 },
@@ -4689,6 +4979,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -4744,6 +5041,9 @@
                 "assignedAt": {
                   "column": "assignedAt"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "taskId": {
                   "column": "taskId"
                 },
@@ -4789,6 +5089,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -4856,6 +5163,9 @@
                 "id": {
                   "column": "id"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "taskId": {
                   "column": "taskId"
                 },
@@ -4887,6 +5197,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -4954,6 +5271,9 @@
                 "id": {
                   "column": "id"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "taskId": {
                   "column": "taskId"
                 },
@@ -4971,6 +5291,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -5019,6 +5346,9 @@
                 "labelId": {
                   "column": "labelId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "taskId": {
                   "column": "taskId"
                 }
@@ -5061,6 +5391,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -5136,6 +5473,9 @@
                 "organizationId": {
                   "column": "organizationId"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "updatedAt": {
                   "column": "updatedAt"
                 }
@@ -5150,6 +5490,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -5204,6 +5551,9 @@
               "fields": {
                 "joinedAt": {
                   "column": "joinedAt"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "teamId": {
                   "column": "teamId"
@@ -5271,6 +5621,13 @@
                   "entityName": "TicketPriority",
                   "namespaceId": "public",
                   "plane": "domain"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
                 }
               },
               "resolvedAt": {
@@ -5393,6 +5750,9 @@
                 "priority": {
                   "column": "priority"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "resolvedAt": {
                   "column": "resolvedAt"
                 },
@@ -5444,6 +5804,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -5510,6 +5877,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "pubId": {
+                  "column": "pubId"
                 },
                 "ticketId": {
                   "column": "ticketId"
@@ -5909,6 +6279,13 @@
                   "kind": "scalar"
                 }
               },
+              "pubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "refreshToken": {
                 "nullable": false,
                 "type": {
@@ -5962,6 +6339,9 @@
                 "ipAddress": {
                   "column": "ipAddress"
                 },
+                "pubId": {
+                  "column": "pubId"
+                },
                 "refreshToken": {
                   "column": "refreshToken"
                 },
@@ -6008,6 +6388,11 @@
                 "organizationId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "title": {
@@ -6085,7 +6470,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "aIMessage": {
               "checks": [
@@ -6138,6 +6529,11 @@
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": true
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 },
                 "role": {
                   "codecId": "pg/text@1",
@@ -6194,7 +6590,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "aIUsage": {
               "columns": {
@@ -6245,6 +6647,11 @@
                   "nullable": false
                 },
                 "provider": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "pubId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
@@ -6341,7 +6748,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "apiKey": {
               "columns": {
@@ -6392,6 +6805,11 @@
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 }
               },
               "foreignKeys": [
@@ -6436,7 +6854,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "auditLog": {
               "columns": {
@@ -6481,6 +6905,11 @@
                 "organizationId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "resourceId": {
@@ -6581,7 +7010,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "conversation": {
               "columns": {
@@ -6606,6 +7041,11 @@
                     "kind": "function"
                   },
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "title": {
@@ -6653,7 +7093,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "conversationParticipant": {
               "columns": {
@@ -6669,6 +7115,11 @@
                     "kind": "function"
                   },
                   "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "userId": {
@@ -6737,7 +7188,13 @@
                   "userId"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "customer": {
               "columns": {
@@ -6789,6 +7246,11 @@
                   "nativeType": "text",
                   "nullable": true
                 },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
@@ -6837,7 +7299,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "documentChunk": {
               "columns": {
@@ -6883,6 +7351,11 @@
                   "codecId": "pg/json@1",
                   "nativeType": "json",
                   "nullable": true
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 }
               },
               "foreignKeys": [
@@ -6919,7 +7392,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "integration": {
               "checks": [
@@ -6983,6 +7462,11 @@
                     "plane": "storage"
                   }
                 },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "refreshToken": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -7029,6 +7513,11 @@
                 ]
               },
               "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                },
                 {
                   "columns": [
                     "organizationId",
@@ -7092,6 +7581,11 @@
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": true
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 },
                 "status": {
                   "codecId": "pg/text@1",
@@ -7169,7 +7663,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "knowledgeBase": {
               "columns": {
@@ -7204,6 +7704,11 @@
                 "organizationId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "updatedAt": {
@@ -7246,7 +7751,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "knowledgeDocument": {
               "checks": [
@@ -7294,6 +7805,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": true
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 },
                 "status": {
                   "codecId": "pg/text@1",
@@ -7355,7 +7871,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "label": {
               "columns": {
@@ -7381,6 +7903,11 @@
                 "organizationId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 }
               },
@@ -7419,6 +7946,11 @@
                 ]
               },
               "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                },
                 {
                   "columns": [
                     "organizationId",
@@ -7468,6 +8000,11 @@
                   "codecId": "pg/json@1",
                   "nativeType": "json",
                   "nullable": true
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 },
                 "senderId": {
                   "codecId": "pg/int4@1",
@@ -7563,7 +8100,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "notification": {
               "checks": [
@@ -7609,6 +8152,11 @@
                 "organizationId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "resourceId": {
@@ -7711,7 +8259,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "oAuthAccount": {
               "checks": [
@@ -7762,6 +8316,11 @@
                   }
                 },
                 "providerAccountId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "pubId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
@@ -7817,6 +8376,11 @@
                 ]
               },
               "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                },
                 {
                   "columns": [
                     "provider",
@@ -8043,6 +8607,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "roleId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -8109,7 +8678,13 @@
                   "roleId"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "payment": {
               "checks": [
@@ -8167,6 +8742,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": true
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 },
                 "status": {
                   "codecId": "pg/text@1",
@@ -8247,7 +8827,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "permission": {
               "columns": {
@@ -8279,6 +8865,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "resource": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -8298,6 +8889,11 @@
                 ]
               },
               "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                },
                 {
                   "columns": [
                     "resource",
@@ -8366,6 +8962,11 @@
                   "nativeType": "numeric",
                   "nullable": false
                 },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
@@ -8379,7 +8980,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "project": {
               "checks": [
@@ -8436,6 +9043,11 @@
                 "organizationId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "startDate": {
@@ -8556,6 +9168,11 @@
               "uniques": [
                 {
                   "columns": [
+                    "pubId"
+                  ]
+                },
+                {
+                  "columns": [
                     "organizationId",
                     "key"
                   ]
@@ -8576,6 +9193,11 @@
                 "projectId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "userId": {
@@ -8644,7 +9266,13 @@
                   "userId"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "role": {
               "columns": {
@@ -8679,6 +9307,11 @@
                 "organizationId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "updatedAt": {
@@ -8724,6 +9357,11 @@
               "uniques": [
                 {
                   "columns": [
+                    "pubId"
+                  ]
+                },
+                {
+                  "columns": [
                     "organizationId",
                     "name"
                   ]
@@ -8744,6 +9382,11 @@
                 "permissionId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "roleId": {
@@ -8812,7 +9455,13 @@
                   "permissionId"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "sprint": {
               "checks": [
@@ -8859,6 +9508,11 @@
                 "projectId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "startDate": {
@@ -8921,10 +9575,21 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "sprintTask": {
               "columns": {
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "sprintId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -8996,7 +9661,13 @@
                   "taskId"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "subscription": {
               "checks": [
@@ -9043,6 +9714,11 @@
                 "planId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "startedAt": {
@@ -9114,6 +9790,11 @@
                 ]
               },
               "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                },
                 {
                   "columns": [
                     "organizationId"
@@ -9205,6 +9886,11 @@
                 "projectId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "status": {
@@ -9326,7 +10012,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "taskAssignee": {
               "columns": {
@@ -9337,6 +10029,11 @@
                     "kind": "function"
                   },
                   "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "taskId": {
@@ -9410,7 +10107,13 @@
                   "userId"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "taskComment": {
               "columns": {
@@ -9445,6 +10148,11 @@
                     "kind": "function"
                   },
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "taskId": {
@@ -9517,7 +10225,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "taskDependency": {
               "checks": [
@@ -9549,6 +10263,11 @@
                     "kind": "function"
                   },
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "taskId": {
@@ -9634,6 +10353,11 @@
               "uniques": [
                 {
                   "columns": [
+                    "pubId"
+                  ]
+                },
+                {
+                  "columns": [
                     "taskId",
                     "dependsOnTaskId"
                   ]
@@ -9645,6 +10369,11 @@
                 "labelId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "taskId": {
@@ -9713,7 +10442,13 @@
                   "labelId"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "team": {
               "columns": {
@@ -9748,6 +10483,11 @@
                 "organizationId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "updatedAt": {
@@ -9793,6 +10533,11 @@
               "uniques": [
                 {
                   "columns": [
+                    "pubId"
+                  ]
+                },
+                {
+                  "columns": [
                     "organizationId",
                     "name"
                   ]
@@ -9808,6 +10553,11 @@
                     "kind": "function"
                   },
                   "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "teamId": {
@@ -9881,7 +10631,13 @@
                   "userId"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "ticket": {
               "checks": [
@@ -9949,6 +10705,11 @@
                     "namespaceId": "public",
                     "plane": "storage"
                   }
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 },
                 "resolvedAt": {
                   "codecId": "pg/timestamptz-string@1",
@@ -10074,7 +10835,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "ticketComment": {
               "columns": {
@@ -10109,6 +10876,11 @@
                     "kind": "function"
                   },
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "ticketId": {
@@ -10181,7 +10953,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             },
             "user": {
               "columns": {
@@ -10289,6 +11067,11 @@
                   "nativeType": "text",
                   "nullable": true
                 },
+                "pubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "refreshToken": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -10339,7 +11122,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "pubId"
+                  ]
+                }
+              ]
             }
           },
           "valueSet": {
@@ -10517,7 +11306,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "4f9d7f08b0b68f3b3262a98959ce0c11849cd20afdb08b7ba2883c2869e48d66"
+    "storageHash": "88b24a796853d22e06b84337f05cd9d8d0d4bb2fa9b69a6f6e2ddbe8a05ffefc"
   },
   "execution": {
     "executionHash": "e80d2174cc8a7def5ad8ba6ea30f449e322046af6e082e17a1d7e7a4dd2da1d1",

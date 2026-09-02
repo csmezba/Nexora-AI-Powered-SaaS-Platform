@@ -6,7 +6,6 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import type { SanitizedUser } from '../../user/domain/entities/user.entity.js';
 
 @InputType('RegisterInput', {
   description: 'Input payload for user registration',

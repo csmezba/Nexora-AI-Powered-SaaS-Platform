@@ -1,7 +1,10 @@
 import {
   ConflictException,
+  HttpException,
   Inject,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -28,6 +31,8 @@ import type { SanitizedUser } from '../user/domain/entities/user.entity.js';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
     @Inject(PASSWORD_HASHER) private readonly passwordHasher: IPasswordHasher,
@@ -35,128 +40,178 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
-    const existing = await this.userRepository.findByEmail(dto.email);
-    if (existing) {
-      throw new ConflictException(
-        `User with email "${dto.email}" already exists`,
+    try {
+      const existing = await this.userRepository.findByEmail(dto.email);
+      if (existing) {
+        throw new ConflictException(
+          `User with email "${dto.email}" already exists`,
+        );
+      }
+
+      const passwordHash = await this.passwordHasher.hash(dto.password);
+      const user = await this.userRepository.create({
+        email: dto.email,
+        passwordHash,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+      });
+
+      const tokenPayload: TokenPayload = {
+        sub: user.id,
+        email: user.email,
+      };
+
+      const tokens = await this.tokenService.generateTokens(tokenPayload);
+      const refreshTokenHash = await this.passwordHasher.hash(
+        tokens.refreshToken,
+      );
+      await this.userRepository.update(user.id, { refreshTokenHash });
+
+      return {
+        user: user.sanitize(),
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        tokenType: tokens.tokenType,
+        expiresIn: tokens.expiresIn,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(`Error in register: ${error instanceof Error ? error.message : String(error)}`);
+      throw new InternalServerErrorException(
+        error instanceof Error ? error.message : 'An error occurred during registration',
       );
     }
-
-    const passwordHash = await this.passwordHasher.hash(dto.password);
-    const user = await this.userRepository.create({
-      email: dto.email,
-      passwordHash,
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-    });
-
-    const tokenPayload: TokenPayload = {
-      sub: user.id,
-      email: user.email,
-    };
-
-    const tokens = await this.tokenService.generateTokens(tokenPayload);
-    const refreshTokenHash = await this.passwordHasher.hash(
-      tokens.refreshToken,
-    );
-    await this.userRepository.update(user.id, { refreshTokenHash });
-
-    return {
-      user: user.sanitize(),
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-      tokenType: tokens.tokenType,
-      expiresIn: tokens.expiresIn,
-    };
   }
 
   async login(dto: LoginDto): Promise<AuthResponseDto> {
-    const user = await this.userRepository.findByEmail(dto.email);
-    if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
+    try {
+      const user = await this.userRepository.findByEmail(dto.email);
+      if (!user) {
+        throw new UnauthorizedException('Invalid email or password');
+      }
+
+      const isPasswordValid = await this.passwordHasher.compare(
+        dto.password,
+        user.passwordHash,
+      );
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid email or password');
+      }
+
+      const tokenPayload: TokenPayload = {
+        sub: user.id,
+        email: user.email,
+      };
+
+      const tokens = await this.tokenService.generateTokens(tokenPayload);
+      const refreshTokenHash = await this.passwordHasher.hash(
+        tokens.refreshToken,
+      );
+      await this.userRepository.update(user.id, { refreshTokenHash });
+
+      return {
+        user: user.sanitize(),
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        tokenType: tokens.tokenType,
+        expiresIn: tokens.expiresIn,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(`Error in login: ${error instanceof Error ? error.message : String(error)}`);
+      throw new InternalServerErrorException(
+        error instanceof Error ? error.message : 'An error occurred during login',
+      );
     }
-
-    const isPasswordValid = await this.passwordHasher.compare(
-      dto.password,
-      user.passwordHash,
-    );
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
-
-    const tokenPayload: TokenPayload = {
-      sub: user.id,
-      email: user.email,
-    };
-
-    const tokens = await this.tokenService.generateTokens(tokenPayload);
-    const refreshTokenHash = await this.passwordHasher.hash(
-      tokens.refreshToken,
-    );
-    await this.userRepository.update(user.id, { refreshTokenHash });
-
-    return {
-      user: user.sanitize(),
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-      tokenType: tokens.tokenType,
-      expiresIn: tokens.expiresIn,
-    };
   }
 
   async refreshToken(dto: RefreshTokenDto): Promise<AuthResponseDto> {
-    const payload = await this.tokenService.verifyRefreshToken(
-      dto.refreshToken,
-    );
-    const user = await this.userRepository.findById(payload.sub);
+    try {
+      const payload = await this.tokenService.verifyRefreshToken(
+        dto.refreshToken,
+      );
+      const user = await this.userRepository.findById(payload.sub);
 
-    if (!user || !user.refreshTokenHash) {
-      throw new UnauthorizedException('Invalid refresh token session');
-    }
+      if (!user || !user.refreshTokenHash) {
+        throw new UnauthorizedException('Invalid refresh token session');
+      }
 
-    const isRefreshMatch = await this.passwordHasher.compare(
-      dto.refreshToken,
-      user.refreshTokenHash,
-    );
+      const isRefreshMatch = await this.passwordHasher.compare(
+        dto.refreshToken,
+        user.refreshTokenHash,
+      );
 
-    if (!isRefreshMatch) {
-      throw new UnauthorizedException(
-        'Refresh token has been revoked or invalidated',
+      if (!isRefreshMatch) {
+        throw new UnauthorizedException(
+          'Refresh token has been revoked or invalidated',
+        );
+      }
+
+      const tokenPayload: TokenPayload = {
+        sub: user.id,
+        email: user.email,
+      };
+
+      const tokens = await this.tokenService.generateTokens(tokenPayload);
+      const newRefreshTokenHash = await this.passwordHasher.hash(
+        tokens.refreshToken,
+      );
+      await this.userRepository.update(user.id, {
+        refreshTokenHash: newRefreshTokenHash,
+      });
+
+      return {
+        user: user.sanitize(),
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        tokenType: tokens.tokenType,
+        expiresIn: tokens.expiresIn,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(`Error in refreshToken: ${error instanceof Error ? error.message : String(error)}`);
+      throw new InternalServerErrorException(
+        error instanceof Error ? error.message : 'An error occurred during token refresh',
       );
     }
-
-    const tokenPayload: TokenPayload = {
-      sub: user.id,
-      email: user.email,
-    };
-
-    const tokens = await this.tokenService.generateTokens(tokenPayload);
-    const newRefreshTokenHash = await this.passwordHasher.hash(
-      tokens.refreshToken,
-    );
-    await this.userRepository.update(user.id, {
-      refreshTokenHash: newRefreshTokenHash,
-    });
-
-    return {
-      user: user.sanitize(),
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-      tokenType: tokens.tokenType,
-      expiresIn: tokens.expiresIn,
-    };
   }
 
   async logout(userId: number): Promise<boolean> {
-    await this.userRepository.update(userId, { refreshTokenHash: null });
-    return true;
+    try {
+      await this.userRepository.update(userId, { refreshTokenHash: null });
+      return true;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(`Error in logout: ${error instanceof Error ? error.message : String(error)}`);
+      throw new InternalServerErrorException(
+        error instanceof Error ? error.message : 'An error occurred during logout',
+      );
+    }
   }
 
   async getProfile(userId: number): Promise<SanitizedUser> {
-    const user = await this.userRepository.findById(userId);
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+    try {
+      const user = await this.userRepository.findById(userId);
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+      return user.sanitize();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(`Error in getProfile: ${error instanceof Error ? error.message : String(error)}`);
+      throw new InternalServerErrorException(
+        error instanceof Error ? error.message : 'An error occurred while fetching user profile',
+      );
     }
-    return user.sanitize();
   }
 }

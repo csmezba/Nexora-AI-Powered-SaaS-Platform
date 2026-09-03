@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service.js';
 import { OrganizationEntity } from '../../domain/entities/organization.entity.js';
+import { generatePubId } from '../../../common/utils/unique-id.util.js';
 import type {
   CreateOrganizationData,
   IOrganizationRepository,
@@ -9,6 +10,7 @@ import type {
 
 interface PrismaOrganizationRecord {
   id: number;
+  pubId: string;
   name?: string | null;
   slug: string;
   logoUrl?: string | null;
@@ -19,6 +21,7 @@ interface PrismaOrganizationRecord {
 
 interface PrismaOrgMemberRecord {
   id: number;
+  pubId: string;
   organizationId: number;
   userId: number;
   role: string;
@@ -78,6 +81,7 @@ export class PrismaOrganizationRepository implements IOrganizationRepository {
   private toEntity(record: PrismaOrganizationRecord): OrganizationEntity {
     return OrganizationEntity.reconstitute({
       id: record.id,
+      pubId: record.pubId,
       name: record.name ?? null,
       slug: record.slug,
       logoUrl: record.logoUrl ?? null,
@@ -92,6 +96,15 @@ export class PrismaOrganizationRepository implements IOrganizationRepository {
     return record ? this.toEntity(record) : null;
   }
 
+  async findByPubId(pubId: string): Promise<OrganizationEntity | null> {
+    const record = await this.orgModel
+      .where((o: { pubId: { eq: (val: string) => unknown } }) =>
+        o.pubId.eq(pubId),
+      )
+      .first();
+    return record ? this.toEntity(record) : null;
+  }
+
   async findBySlug(slug: string): Promise<OrganizationEntity | null> {
     const normalizedSlug = slug.toLowerCase().trim();
     const record = await this.orgModel
@@ -100,6 +113,17 @@ export class PrismaOrganizationRepository implements IOrganizationRepository {
       )
       .first();
     return record ? this.toEntity(record) : null;
+  }
+
+  async findByPubIdOrSlug(identifier: string): Promise<OrganizationEntity | null> {
+    const trimmed = identifier.trim();
+    if (trimmed.startsWith('org_')) {
+      const byPubId = await this.findByPubId(trimmed);
+      if (byPubId) return byPubId;
+    }
+    const bySlug = await this.findBySlug(trimmed);
+    if (bySlug) return bySlug;
+    return this.findByPubId(trimmed);
   }
 
   async findAllByUserId(userId: number): Promise<OrganizationEntity[]> {
@@ -129,6 +153,7 @@ export class PrismaOrganizationRepository implements IOrganizationRepository {
   async create(data: CreateOrganizationData): Promise<OrganizationEntity> {
     const now = new Date().toISOString();
     const record = await this.orgModel.create({
+      pubId: data.pubId ?? generatePubId('org'),
       name: data.name ?? null,
       slug: data.slug.toLowerCase().trim(),
       logoUrl: data.logoUrl ?? null,

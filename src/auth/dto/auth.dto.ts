@@ -6,7 +6,6 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import type { SanitizedUser } from '../../user/domain/entities/user.entity.js';
 
 @InputType('RegisterInput', {
   description: 'Input payload for user registration',
@@ -58,9 +57,11 @@ export class RefreshTokenDto {
 }
 
 @ObjectType('User', { description: 'Sanitized user profile information' })
-export class UserResponseDto implements SanitizedUser {
-  @Field(() => Int, { description: 'Unique user identifier' })
-  id!: number;
+export class UserResponseDto {
+  // id!: number;
+
+  @Field(() => String, { description: 'Public unique user identifier' })
+  pubId!: string;
 
   @Field(() => String, { description: 'User email address' })
   email!: string;

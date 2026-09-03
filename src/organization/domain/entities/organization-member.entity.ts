@@ -2,6 +2,7 @@ import { OrganizationRole } from '../enums/organization-role.enum.js';
 
 export interface OrganizationMemberEntityProps {
   id: number;
+  pubId: string;
   organizationId: number;
   userId: number;
   role: OrganizationRole;
@@ -10,6 +11,7 @@ export interface OrganizationMemberEntityProps {
 
 export interface SanitizedOrganizationMember {
   id: number;
+  pubId: string;
   organizationId: number;
   userId: number;
   role: OrganizationRole;
@@ -18,6 +20,7 @@ export interface SanitizedOrganizationMember {
 
 export class OrganizationMemberEntity {
   private readonly _id: number;
+  private readonly _pubId: string;
   private readonly _organizationId: number;
   private readonly _userId: number;
   private _role: OrganizationRole;
@@ -25,6 +28,7 @@ export class OrganizationMemberEntity {
 
   constructor(props: OrganizationMemberEntityProps) {
     this._id = props.id;
+    this._pubId = props.pubId;
     this._organizationId = props.organizationId;
     this._userId = props.userId;
     this._role = props.role;
@@ -33,6 +37,10 @@ export class OrganizationMemberEntity {
 
   public get id(): number {
     return this._id;
+  }
+
+  public get pubId(): string {
+    return this._pubId;
   }
 
   public get organizationId(): number {
@@ -69,6 +77,7 @@ export class OrganizationMemberEntity {
   public sanitize(): SanitizedOrganizationMember {
     return {
       id: this._id,
+      pubId: this._pubId,
       organizationId: this._organizationId,
       userId: this._userId,
       role: this._role,

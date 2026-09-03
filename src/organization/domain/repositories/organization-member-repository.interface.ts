@@ -7,6 +7,7 @@ export const ORGANIZATION_MEMBER_REPOSITORY = Symbol(
 );
 
 export interface CreateOrganizationMemberData {
+  pubId?: string;
   organizationId: number;
   userId: number;
   role?: OrganizationRole;
@@ -19,6 +20,7 @@ export interface MemberWithUser {
 
 export interface IOrganizationMemberRepository {
   findById(id: number): Promise<OrganizationMemberEntity | null>;
+  findByPubId(pubId: string): Promise<OrganizationMemberEntity | null>;
   findByOrgAndUser(
     organizationId: number,
     userId: number,

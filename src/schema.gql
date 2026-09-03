@@ -7,14 +7,14 @@ input AddOrganizationMemberInput {
   """User email to add"""
   email: String
 
-  """Organization ID"""
-  organizationId: Int!
+  """Organization identifier (pubId, slug, or ID)"""
+  organizationId: String!
 
   """Assigned organization role"""
   role: OrganizationRole = MEMBER
 
-  """User ID to add"""
-  userId: Int
+  """User identifier (pubId or ID) to add"""
+  userId: String
 }
 
 """Authentication response payload containing tokens and user data"""
@@ -99,10 +99,16 @@ type Mutation {
   createOrganization(input: CreateOrganizationInput!): Organization!
 
   """Delete an organization (Requires OWNER role)"""
-  deleteOrganization(id: Int!): DeleteOrganizationResponse!
+  deleteOrganization(
+    """Organization pubId or slug"""
+    pubId: String!
+  ): DeleteOrganizationResponse!
 
   """Leave an organization as a member"""
-  leaveOrganization(organizationId: Int!): MemberActionResponse!
+  leaveOrganization(
+    """Organization pubId or slug"""
+    organizationPubId: String!
+  ): MemberActionResponse!
 
   """Authenticate user with email and password"""
   login(input: LoginInput!): AuthResponse!
@@ -120,7 +126,12 @@ type Mutation {
   removeOrganizationMember(input: RemoveMemberInput!): MemberActionResponse!
 
   """Update organization details (Requires OWNER or ADMIN role)"""
-  updateOrganization(id: Int!, input: UpdateOrganizationInput!): Organization!
+  updateOrganization(
+    input: UpdateOrganizationInput!
+
+    """Organization pubId or slug"""
+    pubId: String!
+  ): Organization!
 
   """
   Update a member role within an organization (Requires OWNER or ADMIN role)
@@ -139,9 +150,6 @@ type Organization {
   """Organization description"""
   description: String
 
-  """Unique organization identifier"""
-  id: Int!
-
   """Organization logo URL"""
   logoUrl: String
 
@@ -150,6 +158,9 @@ type Organization {
 
   """Organization display name"""
   name: String
+
+  """Public unique organization identifier"""
+  pubId: String!
 
   """Unique URL slug identifier"""
   slug: String!
@@ -160,23 +171,17 @@ type Organization {
 
 """Organization membership details"""
 type OrganizationMember {
-  """Unique membership identifier"""
-  id: Int!
-
   """Timestamp when member joined"""
   joinedAt: DateTime!
 
-  """Organization ID"""
-  organizationId: Int!
+  """Public unique membership identifier"""
+  pubId: String!
 
   """Assigned role in organization"""
   role: OrganizationRole!
 
   """User profile of the member"""
   user: User
-
-  """User ID"""
-  userId: Int!
 }
 
 """Role of a member within an organization"""
@@ -201,16 +206,25 @@ type Query {
   """Fetch all organizations the authenticated user is a member of"""
   myOrganizations: [Organization!]!
 
-  """Fetch organization details by unique ID"""
-  organizationById(id: Int!): Organization!
+  """Fetch organization details by unique pubId or slug"""
+  organization(
+    """Organization pubId or slug"""
+    pubIdOrSlug: String!
+  ): Organization!
 
   """Fetch organization details by unique slug"""
-  organizationBySlug(slug: String!): Organization!
+  organizationBySlug(
+    """Organization slug"""
+    slug: String!
+  ): Organization!
 
   """
   Fetch all members belonging to an organization with their user profiles
   """
-  organizationMembers(organizationId: Int!): [OrganizationMember!]!
+  organizationMembers(
+    """Organization pubId or slug"""
+    organizationPubId: String!
+  ): [OrganizationMember!]!
 }
 
 """Input payload for refreshing access token"""
@@ -236,23 +250,23 @@ input RegisterInput {
 
 """Input payload for removing a member from an organization"""
 input RemoveMemberInput {
-  """Organization ID"""
-  organizationId: Int!
+  """Organization identifier (pubId, slug, or ID)"""
+  organizationId: String!
 
-  """Target user ID to remove"""
-  userId: Int!
+  """Target user identifier (pubId, email, or ID) to remove"""
+  userId: String!
 }
 
 """Input payload for updating a member role"""
 input UpdateMemberRoleInput {
-  """Organization ID"""
-  organizationId: Int!
+  """Organization identifier (pubId, slug, or ID)"""
+  organizationId: String!
 
   """New organization role to assign"""
   role: OrganizationRole!
 
-  """Target user ID"""
-  userId: Int!
+  """Target user identifier (pubId, email, or ID)"""
+  userId: String!
 }
 
 """Input payload for updating an organization"""
@@ -284,11 +298,11 @@ type User {
   """Full formatted user name"""
   fullName: String!
 
-  """Unique user identifier"""
-  id: Int!
-
   """User last name"""
   lastName: String
+
+  """Public unique user identifier"""
+  pubId: String!
 
   """Account last updated timestamp"""
   updatedAt: DateTime!

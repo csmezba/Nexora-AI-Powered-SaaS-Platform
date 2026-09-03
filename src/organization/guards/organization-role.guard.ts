@@ -14,6 +14,10 @@ import {
   ORGANIZATION_MEMBER_REPOSITORY,
   type IOrganizationMemberRepository,
 } from '../domain/repositories/organization-member-repository.interface.js';
+import {
+  ORGANIZATION_REPOSITORY,
+  type IOrganizationRepository,
+} from '../domain/repositories/organization-repository.interface.js';
 
 @Injectable()
 export class OrganizationRoleGuard implements CanActivate {
@@ -21,6 +25,8 @@ export class OrganizationRoleGuard implements CanActivate {
     private readonly reflector: Reflector,
     @Inject(ORGANIZATION_MEMBER_REPOSITORY)
     private readonly memberRepository: IOrganizationMemberRepository,
+    @Inject(ORGANIZATION_REPOSITORY)
+    private readonly orgRepository: IOrganizationRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -36,9 +42,11 @@ export class OrganizationRoleGuard implements CanActivate {
     const gqlContext = GqlExecutionContext.create(context);
     const { req } = gqlContext.getContext<{ req: { user?: { id: number } } }>();
     const args = gqlContext.getArgs<{
-      organizationId?: number;
-      id?: number;
-      input?: { organizationId?: number };
+      organizationPubId?: string;
+      pubId?: string;
+      organizationId?: string;
+      id?: string;
+      input?: { organizationId?: string; organizationPubId?: string };
     }>();
 
     const userId = req?.user?.id;
@@ -46,12 +54,22 @@ export class OrganizationRoleGuard implements CanActivate {
       throw new ForbiddenException('User is not authenticated');
     }
 
-    const orgId = args.organizationId ?? args.id ?? args.input?.organizationId;
-    if (!orgId) {
+    const rawOrgId =
+      args.organizationPubId ??
+      args.pubId ??
+      args.organizationId ??
+      args.id ??
+      args.input?.organizationId;
+    if (!rawOrgId) {
       return true;
     }
 
-    const member = await this.memberRepository.findByOrgAndUser(orgId, userId);
+    const org = await this.orgRepository.findByPubIdOrSlug(String(rawOrgId));
+    if (!org) {
+      throw new NotFoundException(`Organization '${rawOrgId}' not found`);
+    }
+
+    const member = await this.memberRepository.findByOrgAndUser(org.id, userId);
     if (!member) {
       throw new NotFoundException('You are not a member of this organization');
     }

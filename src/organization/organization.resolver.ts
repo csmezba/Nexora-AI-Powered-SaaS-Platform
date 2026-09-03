@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { OrganizationService } from './organization.service.js';
@@ -34,14 +34,14 @@ export class OrganizationResolver {
   }
 
   @Query(() => OrganizationResponseDto, {
-    name: 'organizationById',
-    description: 'Fetch organization details by unique ID',
+    name: 'organization',
+    description: 'Fetch organization details by unique pubId or slug',
   })
-  async organizationById(
-    @Args('id', { type: () => Int }) id: number,
+  async organization(
+    @Args('pubIdOrSlug', { type: () => String, description: 'Organization pubId or slug' }) pubIdOrSlug: string,
     @CurrentUser('id') userId: number,
   ): Promise<OrganizationResponseDto> {
-    return this.organizationService.getOrganizationById(id, userId);
+    return this.organizationService.getOrganization(pubIdOrSlug, userId);
   }
 
   @Query(() => OrganizationResponseDto, {
@@ -49,7 +49,7 @@ export class OrganizationResolver {
     description: 'Fetch organization details by unique slug',
   })
   async organizationBySlug(
-    @Args('slug', { type: () => String }) slug: string,
+    @Args('slug', { type: () => String, description: 'Organization slug' }) slug: string,
     @CurrentUser('id') userId: number,
   ): Promise<OrganizationResponseDto> {
     return this.organizationService.getOrganizationBySlug(slug, userId);
@@ -61,10 +61,10 @@ export class OrganizationResolver {
       'Fetch all members belonging to an organization with their user profiles',
   })
   async organizationMembers(
-    @Args('organizationId', { type: () => Int }) organizationId: number,
+    @Args('organizationPubId', { type: () => String, description: 'Organization pubId or slug' }) organizationPubId: string,
     @CurrentUser('id') userId: number,
   ): Promise<OrganizationMemberResponseDto[]> {
-    return this.organizationService.listMembers(organizationId, userId);
+    return this.organizationService.listMembers(organizationPubId, userId);
   }
 
   @Mutation(() => OrganizationResponseDto, {
@@ -82,10 +82,10 @@ export class OrganizationResolver {
   })
   async updateOrganization(
     @CurrentUser('id') userId: number,
-    @Args('id', { type: () => Int }) id: number,
+    @Args('pubId', { type: () => String, description: 'Organization pubId or slug' }) pubId: string,
     @Args('input') input: UpdateOrganizationInput,
   ): Promise<OrganizationResponseDto> {
-    return this.organizationService.updateOrganization(id, userId, input);
+    return this.organizationService.updateOrganization(pubId, userId, input);
   }
 
   @Mutation(() => DeleteOrganizationResponseDto, {
@@ -93,9 +93,9 @@ export class OrganizationResolver {
   })
   async deleteOrganization(
     @CurrentUser('id') userId: number,
-    @Args('id', { type: () => Int }) id: number,
+    @Args('pubId', { type: () => String, description: 'Organization pubId or slug' }) pubId: string,
   ): Promise<DeleteOrganizationResponseDto> {
-    return this.organizationService.deleteOrganization(id, userId);
+    return this.organizationService.deleteOrganization(pubId, userId);
   }
 
   @Mutation(() => MemberActionResponseDto, {
@@ -136,8 +136,8 @@ export class OrganizationResolver {
   })
   async leaveOrganization(
     @CurrentUser('id') userId: number,
-    @Args('organizationId', { type: () => Int }) organizationId: number,
+    @Args('organizationPubId', { type: () => String, description: 'Organization pubId or slug' }) organizationPubId: string,
   ): Promise<MemberActionResponseDto> {
-    return this.organizationService.leaveOrganization(userId, organizationId);
+    return this.organizationService.leaveOrganization(userId, organizationPubId);
   }
 }

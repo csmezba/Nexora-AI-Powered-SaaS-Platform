@@ -1,5 +1,6 @@
 export interface UserEntityProps {
   id: number;
+  pubId: string;
   email: string;
   passwordHash: string;
   firstName?: string | null;
@@ -11,6 +12,7 @@ export interface UserEntityProps {
 
 export interface SanitizedUser {
   id: number;
+  pubId: string;
   email: string;
   firstName: string | null;
   lastName: string | null;
@@ -21,6 +23,7 @@ export interface SanitizedUser {
 
 export class UserEntity {
   private readonly _id: number;
+  private readonly _pubId: string;
   private readonly _email: string;
   private _passwordHash: string;
   private _firstName: string | null;
@@ -31,6 +34,7 @@ export class UserEntity {
 
   constructor(props: UserEntityProps) {
     this._id = props.id;
+    this._pubId = props.pubId;
     this._email = props.email.toLowerCase().trim();
     this._passwordHash = props.passwordHash;
     this._firstName = props.firstName ?? null;
@@ -42,6 +46,10 @@ export class UserEntity {
 
   public get id(): number {
     return this._id;
+  }
+
+  public get pubId(): string {
+    return this._pubId;
   }
 
   public get email(): string {
@@ -106,6 +114,7 @@ export class UserEntity {
   public sanitize(): SanitizedUser {
     return {
       id: this._id,
+      pubId: this._pubId,
       email: this._email,
       firstName: this._firstName,
       lastName: this._lastName,

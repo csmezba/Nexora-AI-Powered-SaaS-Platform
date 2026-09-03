@@ -16,7 +16,10 @@ import { ResponseTransformMiddleware } from './common/middlewares/response-trans
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile:
+        process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL)
+          ? true
+          : join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       playground: false,
       introspection: true,

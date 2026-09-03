@@ -64,3 +64,6 @@ dist/
 /.cursor/*
 /.devin/*
 
+*.tsbuildinfo
+
+

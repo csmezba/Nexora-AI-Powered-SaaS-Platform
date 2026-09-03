@@ -1,9 +1,10 @@
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../src/app.module.js';
+import { AppModule } from '../dist/app.module.js';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express, { type Request, type Response } from 'express';
 import { ValidationPipe } from '@nestjs/common';
-import { GlobalExceptionFilter } from '../src/common/filters/global-exception.filter.js';
+import { GlobalExceptionFilter } from '../dist/common/filters/global-exception.filter.js';
 
 const server = express();
 let isAppInitialized = false;

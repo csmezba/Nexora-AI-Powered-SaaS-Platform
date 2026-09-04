@@ -17,6 +17,27 @@ input AddOrganizationMemberInput {
   userId: String
 }
 
+"""Input payload for assigning or updating permissions of a role"""
+input AssignPermissionsInput {
+  """List of permission pubIds to associate with the role"""
+  permissionPubIds: [String!]!
+
+  """Role pubId"""
+  rolePubId: String!
+}
+
+"""Input payload for assigning an organization role to a member"""
+input AssignRoleToMemberInput {
+  """Organization member pubId"""
+  memberPubId: String!
+
+  """Organization pubId or slug where the member belongs"""
+  organizationPubId: String!
+
+  """Role pubId"""
+  rolePubId: String!
+}
+
 """Authentication response payload containing tokens and user data"""
 type AuthResponse {
   """JWT Access Token"""
@@ -50,6 +71,35 @@ input CreateOrganizationInput {
   slug: String!
 }
 
+"""Input payload for creating a new system permission"""
+input CreatePermissionInput {
+  """
+  Action performed on the resource (e.g. create, read, update, delete, manage)
+  """
+  action: String!
+
+  """Description of what this permission allows"""
+  description: String
+
+  """Target resource name (e.g. project, task, billing)"""
+  resource: String!
+}
+
+"""Input payload for creating a new organization role"""
+input CreateRoleInput {
+  """Role description"""
+  description: String
+
+  """Role name (e.g. Project Lead, Support Agent, Billing Manager)"""
+  name: String!
+
+  """Organization pubId or slug where the role belongs"""
+  organizationPubId: String!
+
+  """List of permission pubIds to assign to this role initially"""
+  permissionPubIds: [String!]
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -61,6 +111,24 @@ type DeleteOrganizationResponse {
   message: String!
 
   """Indicates whether the organization was deleted successfully"""
+  success: Boolean!
+}
+
+"""Response payload for deleting a permission"""
+type DeletePermissionResponse {
+  """Status message"""
+  message: String!
+
+  """Indicates whether the permission was deleted successfully"""
+  success: Boolean!
+}
+
+"""Response payload for deleting a role"""
+type DeleteRoleResponse {
+  """Status message"""
+  message: String!
+
+  """Indicates whether the role was deleted successfully"""
   success: Boolean!
 }
 
@@ -95,14 +163,44 @@ type Mutation {
   """Add a new member to an organization (Requires OWNER or ADMIN role)"""
   addOrganizationMember(input: AddOrganizationMemberInput!): MemberActionResponse!
 
+  """
+  Assign or synchronize permissions for a role (Requires OWNER or ADMIN role)
+  """
+  assignPermissionsToRole(input: AssignPermissionsInput!): Role!
+
+  """Assign a role to an organization member (Requires OWNER or ADMIN role)"""
+  assignRoleToMember(input: AssignRoleToMemberInput!): RoleActionResponse!
+
   """Create a new organization and assign the creator as OWNER"""
   createOrganization(input: CreateOrganizationInput!): Organization!
+
+  """Create a new permission entry"""
+  createPermission(input: CreatePermissionInput!): Permission!
+
+  """
+  Create a new organization role (Requires OWNER or ADMIN role in organization)
+  """
+  createRole(input: CreateRoleInput!): Role!
 
   """Delete an organization (Requires OWNER role)"""
   deleteOrganization(
     """Organization pubId or slug"""
     pubId: String!
   ): DeleteOrganizationResponse!
+
+  """Delete a permission"""
+  deletePermission(
+    """Permission pubId"""
+    pubId: String!
+  ): DeletePermissionResponse!
+
+  """
+  Delete a role from organization (Requires OWNER or ADMIN role in organization)
+  """
+  deleteRole(
+    """Role pubId"""
+    pubId: String!
+  ): DeleteRoleResponse!
 
   """Leave an organization as a member"""
   leaveOrganization(
@@ -125,6 +223,11 @@ type Mutation {
   """Remove a member from an organization (Requires OWNER or ADMIN role)"""
   removeOrganizationMember(input: RemoveMemberInput!): MemberActionResponse!
 
+  """
+  Remove a role from an organization member (Requires OWNER or ADMIN role)
+  """
+  removeRoleFromMember(input: RemoveRoleFromMemberInput!): RoleActionResponse!
+
   """Update organization details (Requires OWNER or ADMIN role)"""
   updateOrganization(
     input: UpdateOrganizationInput!
@@ -137,6 +240,22 @@ type Mutation {
   Update a member role within an organization (Requires OWNER or ADMIN role)
   """
   updateOrganizationMemberRole(input: UpdateMemberRoleInput!): MemberActionResponse!
+
+  """Update permission details"""
+  updatePermission(
+    input: UpdatePermissionInput!
+
+    """Permission pubId"""
+    pubId: String!
+  ): Permission!
+
+  """Update role details (Requires OWNER or ADMIN role in organization)"""
+  updateRole(
+    input: UpdateRoleInput!
+
+    """Role pubId"""
+    pubId: String!
+  ): Role!
 }
 
 """Organization details"""
@@ -199,6 +318,27 @@ enum OrganizationRole {
   VIEWER
 }
 
+"""Permission details"""
+type Permission {
+  """Action on the resource"""
+  action: String!
+
+  """Permission creation timestamp"""
+  createdAt: DateTime!
+
+  """Permission description"""
+  description: String
+
+  """Public unique permission identifier"""
+  pubId: String!
+
+  """Target resource name"""
+  resource: String!
+
+  """Permission last updated timestamp"""
+  updatedAt: DateTime!
+}
+
 type Query {
   """Fetch current logged in user profile"""
   me: User!
@@ -218,6 +358,15 @@ type Query {
     slug: String!
   ): Organization!
 
+  """Fetch custom roles assigned to an organization member"""
+  organizationMemberRoles(
+    """Member pubId"""
+    memberPubId: String!
+
+    """Organization pubId or slug"""
+    organizationPubId: String!
+  ): [Role!]!
+
   """
   Fetch all members belonging to an organization with their user profiles
   """
@@ -225,6 +374,21 @@ type Query {
     """Organization pubId or slug"""
     organizationPubId: String!
   ): [OrganizationMember!]!
+
+  """Fetch all custom roles belonging to an organization"""
+  organizationRoles(
+    """Organization pubId or slug"""
+    organizationPubId: String!
+  ): [Role!]!
+
+  """Fetch all available system permissions"""
+  permissions: [Permission!]!
+
+  """Fetch role details with permissions by unique pubId"""
+  role(
+    """Role pubId"""
+    pubId: String!
+  ): Role!
 }
 
 """Input payload for refreshing access token"""
@@ -257,6 +421,51 @@ input RemoveMemberInput {
   userId: String!
 }
 
+"""Input payload for removing an organization role from a member"""
+input RemoveRoleFromMemberInput {
+  """Organization member pubId"""
+  memberPubId: String!
+
+  """Organization pubId or slug where the member belongs"""
+  organizationPubId: String!
+
+  """Role pubId"""
+  rolePubId: String!
+}
+
+"""Role details"""
+type Role {
+  """Role creation timestamp"""
+  createdAt: DateTime!
+
+  """Role description"""
+  description: String
+
+  """Role name"""
+  name: String!
+
+  """List of permissions assigned to this role"""
+  permissions: [Permission!]!
+
+  """Public unique role identifier"""
+  pubId: String!
+
+  """Role last updated timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Generic response payload for role operations"""
+type RoleActionResponse {
+  """Status message"""
+  message: String!
+
+  """Role details if applicable"""
+  role: Role
+
+  """Whether the operation succeeded"""
+  success: Boolean!
+}
+
 """Input payload for updating a member role"""
 input UpdateMemberRoleInput {
   """Organization identifier (pubId, slug, or ID)"""
@@ -282,6 +491,27 @@ input UpdateOrganizationInput {
 
   """Unique URL-friendly slug identifier for the organization"""
   slug: String
+}
+
+"""Input payload for updating an existing permission"""
+input UpdatePermissionInput {
+  """Action performed on the resource"""
+  action: String
+
+  """Description of what this permission allows"""
+  description: String
+
+  """Target resource name"""
+  resource: String
+}
+
+"""Input payload for updating an existing role"""
+input UpdateRoleInput {
+  """Role description"""
+  description: String
+
+  """Role display name"""
+  name: String
 }
 
 """Sanitized user profile information"""

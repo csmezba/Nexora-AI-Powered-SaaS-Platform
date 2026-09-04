@@ -65,5 +65,8 @@ dist/
 /.devin/*
 
 *.tsbuildinfo
+.vercel/
 
 
+.vercel
+.env*

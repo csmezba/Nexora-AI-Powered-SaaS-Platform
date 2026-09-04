@@ -21,7 +21,14 @@
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "postinstall": "prisma skills sync || exit 0",
-    "contract:emit": "prisma contract emit"
+    "contract:emit": "prisma contract emit",
+    "seed": "jiti src/prisma/seeds/seed.ts",
+    "seed:all": "jiti src/prisma/seeds/seed.ts all",
+    "seed:user": "jiti src/prisma/seeds/seed.ts user",
+    "seed:auth": "jiti src/prisma/seeds/seed.ts auth",
+    "seed:organization": "jiti src/prisma/seeds/seed.ts organization",
+    "seed:permission": "jiti src/prisma/seeds/seed.ts permission",
+    "seed:role": "jiti src/prisma/seeds/seed.ts role"
   },
   "dependencies": {
     "@apollo/server": "^5.5.1",
